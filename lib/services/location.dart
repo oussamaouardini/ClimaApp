@@ -1,6 +1,7 @@
 import 'package:clima/utilities/imports.dart';
 
 
+
 class Location{
   double latitude ;
   double longitude ;
