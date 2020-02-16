@@ -29,8 +29,8 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void updateUI(dynamic weatherData) {
-//    double temp = weatherData['main']['temp'];
-//    temperature = temp.toInt();
+//    dynamic temp = weatherData['main']['temp'];
+//    temperature = temp;
 //    var condition = weatherData['weather'][0]['id'];
 //    weatherIcon =  weatherModel.getWeatherIcon(condition);
 //    cityName = weatherData['name'];
@@ -44,8 +44,17 @@ class _LocationScreenState extends State<LocationScreen> {
         weatherMessage = 'Unable to get weather data';
         return;
       } else {
-        double temp = weatherData['main']['temp'];
-        temperature = temp.toInt();
+
+        try{
+          double temp = weatherData['main']['temp'];
+          temperature = temp.toInt();
+          print('parsing');
+        }catch(e){
+          temperature = weatherData['main']['temp'];
+          print('catch');
+        }
+
+
         var condition = weatherData['weather'][0]['id'];
         weatherIcon = weatherModel.getWeatherIcon(condition);
         cityName = weatherData['name'];
@@ -68,66 +77,72 @@ class _LocationScreenState extends State<LocationScreen> {
         ),
         constraints: BoxConstraints.expand(),
         child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  FlatButton(
-                    onPressed: () async {
-                      var weatherData = await weatherModel.getLocationWeather();
-                      updateUI(weatherData);
-                    },
-                    child: Icon(
-                      Icons.near_me,
-                      size: 50.0,
-                    ),
-                  ),
-                  FlatButton(
-                    onPressed: () async {
-                      var typedName = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CityScreen()));
-                      if (typedName != null) {
-                        var weatherData =
-                            await weatherModel.getCityWeather(typedName);
-                        updateUI(weatherData);
-                      }
-                    },
-                    child: Icon(
-                      Icons.location_city,
-                      size: 50.0,
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Row(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      '$temperature°',
-                      style: kTempTextStyle,
+                    FlatButton(
+                      onPressed: () async {
+                        var weatherData = await weatherModel.getLocationWeather();
+                        updateUI(weatherData);
+                      },
+                      child: Icon(
+                        Icons.near_me,
+                        size: 50.0,
+                      ),
                     ),
-                    Text(
-                      weatherIcon,
-                      style: kConditionTextStyle,
+                    FlatButton(
+                      onPressed: () async {
+                        var typedName = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CityScreen()));
+                        if (typedName != null) {
+                          var weatherData =
+                              await weatherModel.getCityWeather(typedName);
+                          updateUI(weatherData);
+                        }
+                      },
+                      child: Icon(
+                        Icons.location_city,
+                        size: 50.0,
+                      ),
                     ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 15.0),
-                child: Text(
-                  "$weatherMessage in $cityName !",
-                  textAlign: TextAlign.right,
-                  style: kMessageTextStyle,
+                Padding(
+                  padding: EdgeInsets.only(left: 15.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          '$temperature°',
+                          style: kTempTextStyle,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          weatherIcon,
+                          style: kConditionTextStyle,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(right: 15.0),
+                  child: Text(
+                    "$weatherMessage in $cityName !",
+                    textAlign: TextAlign.right,
+                    style: kMessageTextStyle,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
