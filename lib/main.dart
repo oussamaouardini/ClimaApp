@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       data: data,
       child: MaterialApp(
         // theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
         home: LoadingWeather(),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -55,7 +56,7 @@ class _LoadingWeatherState extends State<LoadingWeather> {
     dynamic weatherData = await WeatherModel().getFiveDays();
     int dr = weatherData['list'].length;
 
-    DateTime dt = DateTime.parse(weatherData['list'][9]["dt_txt"]);
+    DateTime dt = DateTime.parse(weatherData['list'][0]["dt_txt"]);
 
     List<dynamic> dates = [];
 
@@ -67,7 +68,6 @@ class _LoadingWeatherState extends State<LoadingWeather> {
       }
     }
     var weatherDetail = await WeatherModel().getLocationWeather();
-    //print(dt.month);
       Navigator.push(context, MaterialPageRoute(builder:(context)=> WeatherApp(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,) ));
   }
 
@@ -76,10 +76,19 @@ class _LoadingWeatherState extends State<LoadingWeather> {
     SizeConfig().init(context);
   //  getLocationData();
     return Scaffold(
-        body: Center(
-          child: SpinKitDoubleBounce(
-            color: Colors.white,
-            size: SizeConfig.blockSizeHorizontal*20,
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text("Climate Predictor",style: TextStyle(
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold
+              ),),
+              SpinKitDoubleBounce(
+                color: Colors.blueGrey,
+                size: SizeConfig.blockSizeHorizontal*20,
+              ),
+            ],
           ),
         ),
     );

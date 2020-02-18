@@ -17,12 +17,27 @@ class WeatherModel {
     var weatherData = await networkHelper.getData();
     return weatherData ;
   }
+  Future<dynamic> getLocationWeatherByName(String city) async {
+    Location location = Location();
+    await location.getCurrentLocation();
+    NetworkHelper networkHelper = NetworkHelper("$openWeatherMapURL?q=$city&appid=$apiKey&units=metric");
+    var weatherData = await networkHelper.getData();
+    return weatherData ;
+  }
 
 
   Future<dynamic> getFiveDays() async {
     Location location = Location();
     await location.getCurrentLocation();
     NetworkHelper networkHelper = NetworkHelper("$openWeatherMapUrlForecast?lat=${location.latitude}&lon=${location.longitude}&appid=$apiKey");
+
+    var weatherData = await networkHelper.getData();
+    return weatherData ;
+  }
+  Future<dynamic> getFiveDaysByName(String cityName) async {
+    Location location = Location();
+    await location.getCurrentLocation();
+    NetworkHelper networkHelper = NetworkHelper("$openWeatherMapUrlForecast?q=$cityName&appid=$apiKey");
 
     var weatherData = await networkHelper.getData();
     return weatherData ;
