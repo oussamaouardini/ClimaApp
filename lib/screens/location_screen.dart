@@ -29,13 +29,6 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void updateUI(dynamic weatherData) {
-//    dynamic temp = weatherData['main']['temp'];
-//    temperature = temp;
-//    var condition = weatherData['weather'][0]['id'];
-//    weatherIcon =  weatherModel.getWeatherIcon(condition);
-//    cityName = weatherData['name'];
-//    weatherMessage = weatherModel.getMessage(temperature);
-
     setState(() {
       if (weatherData == null) {
         temperature = 0;
@@ -65,6 +58,7 @@ class _LocationScreenState extends State<LocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

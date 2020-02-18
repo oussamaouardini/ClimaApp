@@ -8,5 +8,4 @@ export 'package:clima/screens/loading_screen.dart';
 export 'package:flutter_spinkit/flutter_spinkit.dart';
 export 'package:clima/utilities/size_config.dart';
 export 'package:clima/services/weather.dart';
-
-
+export 'package:easy_localization/easy_localization.dart';

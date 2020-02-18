@@ -19,6 +19,16 @@ class WeatherModel {
   }
 
 
+  Future<dynamic> getFiveDays() async {
+    Location location = Location();
+    await location.getCurrentLocation();
+    NetworkHelper networkHelper = NetworkHelper("$openWeatherMapUrlForecast?lat=${location.latitude}&lon=${location.longitude}&appid=$apiKey");
+
+    var weatherData = await networkHelper.getData();
+    return weatherData ;
+  }
+
+
   String getWeatherIcon(int condition) {
     if (condition < 300) {
       return '🌩';
