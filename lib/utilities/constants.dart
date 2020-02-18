@@ -1,3 +1,4 @@
+import 'package:clima/screens/weather.dart';
 import 'package:flutter/material.dart';
 
 const kTempTextStyle = TextStyle(
@@ -37,3 +38,4 @@ const  kTextFieldInputDecoration = InputDecoration(
         borderSide: BorderSide.none
     )
 );
+
