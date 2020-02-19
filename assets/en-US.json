@@ -1,5 +1,12 @@
 {
   "title": "welcome to the app ",
   "content": "this is content",
-  "buttonText": "Change to arabic"
+  "buttonText": "Change to arabic",
+  "close": "close",
+  "settings": "Settings",
+  "change_language": "change Language",
+  "language_flag": "images/us_flag.png",
+  "localization": "localization",
+  "search": "Search",
+  "home": "Home"
 }

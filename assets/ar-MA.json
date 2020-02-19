@@ -1,5 +1,12 @@
 {
   "title": "مرحبا بكم ",
   "content": "المحتوى",
-  "buttonText": "غير اللغة للانجليزي"
+  "buttonText": "غير اللغة للانجليزي",
+  "close": "اغلق",
+  "settings": "إعدادات",
+  "change_language": "تغيير اللغة",
+  "language_flag": "images/ma_flag.png",
+  "localization": "الموقع",
+  "search": "ابحث",
+  "home": "الرئيسية"
 }

@@ -76,6 +76,7 @@ class _LoadingWeatherState extends State<LoadingWeather> {
     SizeConfig().init(context);
   //  getLocationData();
     return Scaffold(
+      backgroundColor: Color(0xFFb0bec5),
         body: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -85,55 +86,12 @@ class _LoadingWeatherState extends State<LoadingWeather> {
                 fontWeight: FontWeight.bold
               ),),
               SpinKitDoubleBounce(
-                color: Colors.blueGrey,
+                color: Colors.white,
                 size: SizeConfig.blockSizeHorizontal*20,
               ),
             ],
           ),
         ),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    var data = EasyLocalizationProvider.of(context).data;
-    return EasyLocalizationProvider(
-      data: data,
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text(AppLocalizations.of(context).tr('title')),
-          ),
-          body: GridView.builder(
-              itemCount: list.length,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemBuilder: (BuildContext context, int index) {
-                return item(list[index].icon, list[index].title);
-              })
-//        body: Center(
-//          child: SpinKitDoubleBounce(
-//            color: Colors.white,
-//            size: SizeConfig.blockSizeHorizontal*20,
-//          ),
-//        ),
-          ),
-    );
-  }
-
-  Widget item(Icon icon, String title) {
-    return Card(
-      child: GridTile(
-        child: icon,
-        footer: Text(title),
-      ),
     );
   }
 }
