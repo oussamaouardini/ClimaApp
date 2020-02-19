@@ -156,11 +156,14 @@ class _WeatherAppState extends State<WeatherApp> {
     super.initState();
     updateUI(widget.weatherDetails);
   }
+  var focusNode = new FocusNode();
   @override
   Widget build(BuildContext context) {
     updateUI(widget.weatherDetails);
     SizeConfig().init(context);
+    var data = EasyLocalizationProvider.of(context).data;
     return EasyLocalizationProvider(
+      data: data,
       child: Stack(
         children: <Widget>[
           WillPopScope(
@@ -168,7 +171,7 @@ class _WeatherAppState extends State<WeatherApp> {
               return moveToLastScreen();
             },
             child: Directionality(
-              textDirection: TextDirection.ltr,
+              textDirection:  ( data.locale.toString() == "en_US" ) ? TextDirection.ltr : TextDirection.rtl ,
               child: Scaffold(
                   bottomNavigationBar: CubertoBottomBar(
                   //  inactiveIconColor: inactiveColor,
@@ -178,22 +181,17 @@ class _WeatherAppState extends State<WeatherApp> {
                     tabs: [
                       TabData(
                         iconData: Icons.home,
-                        title: "Home",
+                        title: AppLocalizations.of(context).tr("home"),
                         tabColor: Color(0xFF607D8B),
                       ),
                       TabData(
-                        iconData: Icons.search,
-                        title: "Search",
+                        iconData: Icons.location_on,
+                        title: AppLocalizations.of(context).tr("localization"),
                         tabColor: Color(0xFF607D8B),
                       ),
                       TabData(
-                          iconData: Icons.location_on,
-                          title: "Alarm",
-                        tabColor: Color(0xFF607D8B),
-                      ),
-                      TabData(
-                          iconData: Icons.settings,
-                          title: "Settings",
+                        iconData: Icons.settings,
+                        title: AppLocalizations.of(context).tr('settings'),
                         tabColor: Color(0xFF607D8B),
                       ),
                     ],
@@ -203,10 +201,12 @@ class _WeatherAppState extends State<WeatherApp> {
                         currentTitle = title;
                         currentColor = color;
 
-                        if(position == 3){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Settings()));
+                        switch(currentPage){
+                          case 0: break ;
+                          case 1: FocusScope.of(context).requestFocus(focusNode); break ;
+                          case 2: Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Settings()));break;
+                          default:break ;
                         }
-
                       });
                     },
                   ),
@@ -222,6 +222,7 @@ class _WeatherAppState extends State<WeatherApp> {
                               if (this.actionIcon.icon == Icons.search) {
                                 this.actionIcon = new Icon(Icons.close);
                                 this.appBarTitle = new TextField(
+                                  focusNode: focusNode,
                                   controller: searchController,
                                   style: new TextStyle(
                                     color: Colors.white,
@@ -277,12 +278,12 @@ class _WeatherAppState extends State<WeatherApp> {
                                                   builder: (BuildContext context) {
                                                     // return object of type Dialog
                                                     return AlertDialog(
-                                                      title: new Text("Soory"),
-                                                      content: new Text("We couldn't find  \"${searchController.text}\"  city"),
+                                                      title: Text(AppLocalizations.of(context).tr('sorry')),
+                                                      content: new Text(AppLocalizations.of(context).tr('WeCouldFind')+"\"${searchController.text}\""),
                                                       actions: <Widget>[
                                                         // usually buttons at the bottom of the dialog
                                                         new FlatButton(
-                                                          child: new Text("Close"),
+                                                          child: Text(AppLocalizations.of(context).tr('close')),
                                                           onPressed: () {
                                                             Navigator.of(context).pop();
                                                           },
@@ -297,7 +298,7 @@ class _WeatherAppState extends State<WeatherApp> {
                                           },
                                           child: new Icon(Icons.search,
                                               color: Colors.white)),
-                                      hintText: "Search...",
+                                      hintText: AppLocalizations.of(context).tr('search')+"...",
                                       hintStyle: new TextStyle(color: Colors.white)),
                                 );
                               } else {
@@ -460,7 +461,7 @@ class _WeatherAppState extends State<WeatherApp> {
                                               MainAxisAlignment.spaceAround,
                                               children: <Widget>[
                                                 Text(
-                                                  "weather",
+                                                  AppLocalizations.of(context).tr("weather"),
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontWeight: FontWeight.bold),
@@ -612,10 +613,11 @@ class _WeatherAppState extends State<WeatherApp> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Text("Humidity",
+                                          Text(AppLocalizations.of(context).tr("humidity"),
                                               style: TextStyle(
                                                   fontFamily: "nunito",
-                                                  color: Colors.black.withOpacity(.5),
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
                                                   fontSize: 15.0)),
                                           Text(
                                               "${widget.locationWeather[widget.currentPage]['main']['humidity']}%",
@@ -687,9 +689,10 @@ class _WeatherAppState extends State<WeatherApp> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
-                                          Text("Pressure",
+                                          Text(AppLocalizations.of(context).tr("pressure"),
                                               style: TextStyle(
-                                                  color: Colors.black.withOpacity(.5),
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
                                                   fontFamily: "nunito",
                                                   fontSize: 15.0)),
                                           Text(
@@ -762,9 +765,10 @@ class _WeatherAppState extends State<WeatherApp> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
-                                          Text("Wind",
+                                          Text(AppLocalizations.of(context).tr("wind"),
                                               style: TextStyle(
-                                                  color: Colors.black.withOpacity(.5),
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
                                                   fontFamily: "nunito",
                                                   fontSize: 15.0)),
                                           Text(
@@ -837,9 +841,10 @@ class _WeatherAppState extends State<WeatherApp> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
-                                          Text("Sea Level",
+                                          Text(AppLocalizations.of(context).tr("seaLevel"),
                                               style: TextStyle(
-                                                  color: Colors.black.withOpacity(.5),
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
                                                   fontFamily: "nunito",
                                                   fontSize: 15.0)),
                                           Text(
@@ -877,7 +882,7 @@ class _WeatherAppState extends State<WeatherApp> {
                                   child: Padding(
                                     padding: EdgeInsets.only(right: 15.0),
                                     child: Text(
-                                      "$weatherMessage in $cityName !",
+                                      AppLocalizations.of(context).tr(weatherMessage),
                                       textAlign: TextAlign.right,
                                       style: kMessageTextStyle,
                                     ),
@@ -896,7 +901,7 @@ class _WeatherAppState extends State<WeatherApp> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text("Current Tempreture",
+                                    Text(AppLocalizations.of(context).tr("currentTemperature"),
                                         style: TextStyle(
                                             color: Colors.black.withOpacity(.5),
                                             fontFamily: "nunito",
@@ -941,40 +946,40 @@ class _WeatherAppState extends State<WeatherApp> {
     String mon = "";
     switch (month) {
       case 1:
-        mon = "January";
+        mon = AppLocalizations.of(context).tr("January");
         break;
       case 2:
-        mon = "February";
+        mon = AppLocalizations.of(context).tr("February");
         break;
       case 3:
-        mon = "March ";
+        mon = AppLocalizations.of(context).tr("March");
         break;
       case 4:
-        mon = "April ";
+        mon = AppLocalizations.of(context).tr("April");
         break;
       case 5:
-        mon = "May";
+        mon = AppLocalizations.of(context).tr("May");
         break;
       case 6:
-        mon = "June";
+        mon = AppLocalizations.of(context).tr("June");
         break;
       case 7:
-        mon = "July";
+        mon = AppLocalizations.of(context).tr("July");
         break;
       case 8:
-        mon = "Auguest";
+        mon = AppLocalizations.of(context).tr("Auguest");
         break;
       case 9:
-        mon = "September";
+        mon = AppLocalizations.of(context).tr("September");
         break;
       case 10:
-        mon = "October";
+        mon = AppLocalizations.of(context).tr("October");
         break;
       case 11:
-        mon = "November";
+        mon = AppLocalizations.of(context).tr("November");
         break;
       case 12:
-        mon = "December";
+        mon = AppLocalizations.of(context).tr("December");
         break;
     }
     return Padding(
