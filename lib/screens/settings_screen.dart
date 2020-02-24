@@ -1,3 +1,4 @@
+import 'package:clima/screens/applocalization_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/screens/location_screen.dart';
 import 'package:clima/utilities/imports.dart';
@@ -51,7 +52,9 @@ class _SettingsState extends State<Settings> {
                 tabColor: Color(0xFF607D8B),
               ),
             ],
-            onTabChangedListener: (position, title, color) {
+            onTabChangedListener: (position, title, color) async {
+              Location location = Location();
+              await location.getCurrentLocation();
               setState(() {
                 currentPage = position;
                 currentTitle = title;
@@ -61,7 +64,7 @@ class _SettingsState extends State<Settings> {
                   case 0:
                     Navigator.of(context).pop();
                     break;
-                  case 1:
+                  case 1: case 1: Navigator.of(context).push(MaterialPageRoute(builder: (context)=> AppLocalization(latitude: location.latitude,longitude: location.longitude,)));
                     break;
                   case 2:
                     break;

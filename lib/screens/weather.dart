@@ -1,3 +1,4 @@
+import 'package:clima/screens/applocalization_screen.dart';
 import 'package:clima/screens/settings_screen.dart';
 import 'package:clima/services/weather.dart';
 import 'package:clima/utilities/constants.dart';
@@ -195,7 +196,9 @@ class _WeatherAppState extends State<WeatherApp> {
                         tabColor: Color(0xFF607D8B),
                       ),
                     ],
-                    onTabChangedListener: (position, title, color) {
+                    onTabChangedListener: (position, title, color) async {
+                      Location location = Location();
+                      await location.getCurrentLocation();
                       setState(() {
                         currentPage = position;
                         currentTitle = title;
@@ -203,7 +206,7 @@ class _WeatherAppState extends State<WeatherApp> {
 
                         switch(currentPage){
                           case 0: break ;
-                          case 1: FocusScope.of(context).requestFocus(focusNode); break ;
+                          case 1: Navigator.of(context).push(MaterialPageRoute(builder: (context)=> AppLocalization(latitude: location.latitude,longitude: location.longitude,))); break ;
                           case 2: Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Settings()));break;
                           default:break ;
                         }
