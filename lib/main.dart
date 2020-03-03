@@ -1,3 +1,4 @@
+import 'package:clima/screens/home.dart';
 import 'package:clima/screens/scrren.dart';
 import 'package:clima/screens/weather.dart';
 import 'package:clima/utilities/imports.dart';
@@ -68,7 +69,7 @@ class _LoadingWeatherState extends State<LoadingWeather> {
       }
     }
     var weatherDetail = await WeatherModel().getLocationWeather();
-      Navigator.push(context, MaterialPageRoute(builder:(context)=> WeatherApp(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,) ));
+      Navigator.push(context, MaterialPageRoute(builder:(context)=> Weather(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,) ));
   }
 
   @override
