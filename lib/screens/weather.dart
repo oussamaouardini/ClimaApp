@@ -164,7 +164,8 @@ class _WeatherAppState extends State<WeatherApp> {
   Widget appBarTitle = new Text("Climate Predictor");
   Icon actionIcon = new Icon(Icons.search);
   final searchController = TextEditingController();
-
+  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  bool enabled = false;
 
   @override
   void initState() {
@@ -189,6 +190,7 @@ class _WeatherAppState extends State<WeatherApp> {
             child: Directionality(
               textDirection:  ( data.locale.toString() == "en_US" ) ? TextDirection.ltr : TextDirection.rtl ,
               child: Scaffold(
+                key: _drawerKey,
                 bottomNavigationBar: Container(
                   height: SizeConfig.blockSizeVertical*8,
                   child: Row(
@@ -392,6 +394,125 @@ class _WeatherAppState extends State<WeatherApp> {
                     ),
                   ),*/
                   backgroundColor: Color(0xFFF6F7F9),
+                  endDrawer: Drawer(
+
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children:  <Widget>[
+                        DrawerHeader(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors:[Color(0xFF9448FF),Color(0xFFB135E8)],
+                            ),
+
+                          ),
+                          child: Center(
+                            child:TextField(
+                              controller: searchController,
+                              style: new TextStyle(
+                                color: Colors.white,
+                              ),
+                              decoration: new InputDecoration(
+                                  prefixIcon: InkWell(
+                                      onTap: () async {
+                                        if (searchController.text.isEmpty) {
+                                        } else {
+
+                                          setState(() {
+                                            loading = true ;
+                                          });
+
+                                          dynamic weatherData = await WeatherModel().getFiveDaysByName(searchController.text.toString());
+                                          int dr ;
+                                          try{
+                                            dr = weatherData['list'].length;
+                                          }catch(e){
+                                            dr = 0 ;
+                                          }
+                                          List<dynamic> dates = [];
+                                          List<dynamic> sunData = [];
+                                          if(dr>0){
+                                            DateTime dt = DateTime.parse(weatherData['list'][0]["dt_txt"]);
+                                            for (int i = 0; i < dr; i++) {
+                                              var date =
+                                              dt.difference(DateTime.parse(weatherData['list'][i]["dt_txt"]));
+                                              if (date.inHours % 24 == 0) {
+                                                dates.add(weatherData['list'][i]);
+                                                final response = await WeatherModel().getSunsetSunRise(DateTime.parse(weatherData['list'][i]["dt_txt"]));
+                                                sunData.add(response);
+                                              }
+                                            }
+                                            var weatherDetail = await WeatherModel().getLocationWeatherByName(searchController.text.toString());
+                                            setState(() {
+                                              loading = false ;
+                                            });
+                                            Navigator.push(context, MaterialPageRoute(builder:(context)=> WeatherApp(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,sunSetSunRise: sunData,) ));
+
+                                          }else{
+                                            setState(() {
+                                              loading = false ;
+                                            });
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                // return object of type Dialog
+                                                return AlertDialog(
+                                                  title: Text(AppLocalizations.of(context).tr('sorry')),
+                                                  content: new Text(AppLocalizations.of(context).tr('WeCouldFind')+"\"${searchController.text}\""),
+                                                  actions: <Widget>[
+                                                    // usually buttons at the bottom of the dialog
+                                                    new FlatButton(
+                                                      child: Text(AppLocalizations.of(context).tr('close')),
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
+
+                                        }
+                                      },
+                                      child: new Icon(Icons.search,
+                                          color: Colors.white)),
+                                  hintText: AppLocalizations.of(context).tr('search')+"...",
+                                  hintStyle: new TextStyle(color: Colors.white)),
+                            ),
+                          )
+                        ),
+                        Column(
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                data.changeLocale(
+                                    Locale('en', 'US'));
+                              },
+                              child: ListTile(
+                                title: Text("English"),
+                                trailing: Image.asset(
+                                    "images/us_flag.png"),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                data.changeLocale(
+                                    Locale('ar', 'MA'));
+                              },
+                              child: ListTile(
+                                title: Text("العربية"),
+                                trailing: Image.asset(
+                                    "images/ma_flag.png"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   body: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SafeArea(
@@ -410,11 +531,50 @@ class _WeatherAppState extends State<WeatherApp> {
                                       Text("${widget.weatherDetails['name']}",style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: SizeConfig.safeBlockHorizontal*10),),
-                                      IconButton(
-                                        icon: Icon(Icons.more_vert),
-                                        onPressed: (){
+                                      Row(
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: Icon(Icons.more_vert),
+                                            onPressed: (){
+                                              _drawerKey.currentState.openEndDrawer();
+                                            },
+                                          ),
+                                          IconButton(icon: Icon(Icons.near_me),
+                                            onPressed: () async{
 
-                                        },
+                                              setState(() {
+                                                loading = true ;
+                                              });
+                                              dynamic weatherData = await WeatherModel().getFiveDays();
+                                              int dr = weatherData['list'].length;
+
+                                              DateTime dt = DateTime.parse(weatherData['list'][9]["dt_txt"]);
+
+                                              List<dynamic> dates = [];
+                                              List<dynamic> sunData = [];
+                                              for (int i = 0; i < dr; i++) {
+                                                var date =
+                                                dt.difference(DateTime.parse(weatherData['list'][i]["dt_txt"]));
+                                                if (date.inHours % 24 == 0) {
+                                                  dates.add(weatherData['list'][i]);
+                                                  final response = await WeatherModel().getSunsetSunRise(DateTime.parse(weatherData['list'][i]["dt_txt"]));
+                                                  sunData.add(response);
+                                                }
+                                              }
+                                              if(dates.length>0){
+                                                var weatherDetail = await WeatherModel().getLocationWeather();
+                                                setState(() {
+                                                  loading = false ;
+                                                });
+                                                Navigator.push(context, MaterialPageRoute(builder:(context)=> WeatherApp(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,sunSetSunRise: sunData,) ));
+
+                                              }else{
+
+                                              }
+
+                                            },
+                                          ),
+                                        ],
                                       )
                                     ],
                                   ),
@@ -690,17 +850,17 @@ class _WeatherAppState extends State<WeatherApp> {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Text("Additional Info",style: TextStyle(
-                                  color: Color(0xFF4D4D4D),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20.0
-                                ),)
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.only(right:8.0,left:8.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(AppLocalizations.of(context).tr("addinfo"),style: TextStyle(
+                                    color: Color(0xFF4D4D4D),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0
+                                  ),)
+                                ],
+                              ),
                             ),
 
                             Container(

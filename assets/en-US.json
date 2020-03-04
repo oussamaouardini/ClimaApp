@@ -39,5 +39,6 @@
   "solarnoon": "solar noon",
   "daylength": "day length",
   "mintemp": "Min Temperature",
-  "maxtemp": "Max Temperature"
+  "maxtemp": "Max Temperature",
+  "addinfo": "Additional Info"
 }
