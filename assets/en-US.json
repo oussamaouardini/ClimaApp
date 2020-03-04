@@ -33,5 +33,11 @@
   "October": "October",
   "November": "November",
   "December": "December",
-  "Location": "My Location"
+  "Location": "My Location",
+  "Sunset": "Sunset",
+  "sunrise": "sunrise",
+  "solarnoon": "solar noon",
+  "daylength": "day length",
+  "mintemp": "Min Temperature",
+  "maxtemp": "Max Temperature"
 }

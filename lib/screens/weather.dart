@@ -12,8 +12,9 @@ class WeatherApp extends StatefulWidget {
   dynamic locationWeather;
   dynamic weatherDetails;
   int currentPage;
+  dynamic sunSetSunRise;
 
-  WeatherApp({this.locationWeather, this.currentPage, this.weatherDetails});
+  WeatherApp({this.locationWeather, this.currentPage, this.weatherDetails,this.sunSetSunRise});
 
   @override
   _WeatherAppState createState() => _WeatherAppState();
@@ -37,6 +38,11 @@ class _WeatherAppState extends State<WeatherApp> {
   String cityName;
   WeatherModel weatherModel = WeatherModel();
   String weatherMessage;
+  String sunset;
+  String sunrise;
+  String dayLength;
+  String solarnon;
+
 
   void updateUI(dynamic weather) {
     if (widget.weatherDetails == null) {
@@ -44,8 +50,17 @@ class _WeatherAppState extends State<WeatherApp> {
       weatherIcon = 'Eroor ';
       cityName = '';
       weatherMessage = 'Unable to get weather data';
+      sunset = "0" ;
+      sunrise = "0";
+      dayLength = "0";
+      solarnon = "0";
       return;
     } else {
+      sunset = widget.sunSetSunRise[widget.currentPage]['results']['sunset'] ;
+      sunrise = widget.sunSetSunRise[widget.currentPage]['results']['sunrise'];
+      dayLength = widget.sunSetSunRise[widget.currentPage]['results']['day_length'];
+      solarnon = widget.sunSetSunRise[widget.currentPage]['results']['solar_noon'];
+
       try {
         double temp = weather['main']['temp'];
         temperature = temp.toInt();
@@ -174,26 +189,57 @@ class _WeatherAppState extends State<WeatherApp> {
             child: Directionality(
               textDirection:  ( data.locale.toString() == "en_US" ) ? TextDirection.ltr : TextDirection.rtl ,
               child: Scaffold(
-                  bottomNavigationBar: CubertoBottomBar(
+                bottomNavigationBar: Container(
+                  height: SizeConfig.blockSizeVertical*8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+
+                      Padding(
+                        padding: const EdgeInsets.only(right:15.0),
+                        child: IconButton(
+                          onPressed: (){
+
+                          },
+                          icon: Icon(Icons.wb_cloudy,color: Color(0xFF801EFE),size: 40.0,),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async{
+                          Location location = Location();
+                          await location.getCurrentLocation();
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> AppLocalization(latitude: location.latitude,longitude: location.longitude,)));
+                        },
+                        icon: Icon(Icons.public,color: Colors.grey,size: 40.0,),
+                      ),
+
+                    ],
+                  ),
+                ),
+                /*  bottomNavigationBar: CubertoBottomBar(
+                    barBackgroundColor: Color(0xFFF6F7F9),
                   //  inactiveIconColor: inactiveColor,
                     tabStyle: CubertoTabStyle.STYLE_FADED_BACKGROUND, // By default its CubertoTabStyle.STYLE_NORMAL
-                    selectedTab: currentPage, // By default its 0, Current page which is fetched when a tab is clickd, should be set here so as the change the tabs, and the same can be done if willing to programmatically change the tab.
+                    selectedTab: currentPage,
+                    inactiveIconColor: Colors.grey,
+                    barBorderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    // By default its 0, Current page which is fetched when a tab is clickd, should be set here so as the change the tabs, and the same can be done if willing to programmatically change the tab.
                    // drawer: CubertoDrawer.NO_DRAWER, // By default its NO_DRAWER (Availble START_DRAWER and END_DRAWER as per where you want to how the drawer icon in Cuberto Bottom bar)
                     tabs: [
                       TabData(
                         iconData: Icons.home,
                         title: AppLocalizations.of(context).tr("home"),
-                        tabColor: Color(0xFF607D8B),
+                        tabColor: Color(0xFF801EFE),
                       ),
                       TabData(
                         iconData: Icons.location_on,
                         title: AppLocalizations.of(context).tr("localization"),
-                        tabColor: Color(0xFF607D8B),
+                        tabColor: Color(0xFF801EFE),
                       ),
                       TabData(
                         iconData: Icons.settings,
                         title: AppLocalizations.of(context).tr('settings'),
-                        tabColor: Color(0xFF607D8B),
+                        tabColor: Color(0xFF801EFE),
                       ),
                     ],
                     onTabChangedListener: (position, title, color) async {
@@ -212,10 +258,10 @@ class _WeatherAppState extends State<WeatherApp> {
                         }
                       });
                     },
-                  ),
-                  appBar: AppBar(
+                  ),*/
+                /*  appBar: AppBar(
                     title: appBarTitle,
-                    backgroundColor: Color(0xFFb0bec5),
+                    backgroundColor: Color(0xFFF6F7F9),
                     actions: <Widget>[
                       IconButton(
                           icon: actionIcon,
@@ -344,25 +390,34 @@ class _WeatherAppState extends State<WeatherApp> {
 
                       },
                     ),
-                  ),
-                  backgroundColor: Color(0xFFe6ebf2),
+                  ),*/
+                  backgroundColor: Color(0xFFF6F7F9),
                   body: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: MediaQuery.of(context).viewPadding.top + 10,
-                          ),
-                          Container(
-                            width: double.infinity,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                    padding: const EdgeInsets.all(8.0),
+                    child: SafeArea(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              width: double.infinity,
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text("${widget.weatherDetails['name']}",style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: SizeConfig.safeBlockHorizontal*10),),
+                                      IconButton(
+                                        icon: Icon(Icons.more_vert),
+                                        onPressed: (){
+
+                                        },
+                                      )
+                                    ],
+                                  ),
                                   cart(
                                       DateTime.parse(
                                           widget.locationWeather[0]
@@ -372,559 +427,702 @@ class _WeatherAppState extends State<WeatherApp> {
                                           widget.locationWeather[0]
                                           ["dt_txt"])
                                           .month,days[0],0),
-
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[1]["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[1]
-                                          ["dt_txt"])
-                                          .month,days[1],1),
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[2]["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[2]
-                                          ["dt_txt"])
-                                          .month,days[2],2),
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[3]["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[3]
-                                          ["dt_txt"])
-                                          .month,days[3],3),
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[4]["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[4]
-                                          ["dt_txt"])
-                                          .month,days[4],4),
                                 ],
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 30.0,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 10.0),
-                            child: Container(
-                                height: 140.0,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFe6ebf2),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(-3, -3),
-                                          color: Colors.white.withOpacity(.7)),
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(3, 3),
-                                          color: Colors.black.withOpacity(.15))
-                                    ]),
-                                child: Container(
-                                  child: Column(
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: SizeConfig.safeBlockVertical*29,
+                              child: PageView(
+                                children: <Widget>[
+                                  Column(
                                     children: <Widget>[
+                                      Container(
+                                        width: double.infinity,
+                                        height: SizeConfig.safeBlockVertical*25,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFFF6F7F9),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(-3, -3),
+                                                color:
+                                                Colors.white.withOpacity(.7)),
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(3, 3),
+                                                color:
+                                                Colors.black.withOpacity(.15))
+                                          ],
+                                        ),
+                                        child: Center(child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            RichText(
+                                              text: TextSpan(
+                                                children: <TextSpan>[
+                                                  TextSpan(text: '${this.temperature}',style: TextStyle(
+                                                      color: Color(0xFF801EFE),
+                                                      fontSize: SizeConfig.safeBlockVertical*9,
+                                                      fontWeight: FontWeight.w600
+                                                  ),),
+                                                  TextSpan(text: ' °C',style: TextStyle(
+                                                      color: Color(0xFF801EFE),
+                                                      fontSize: SizeConfig.safeBlockVertical*5,
+                                                      fontWeight: FontWeight.w500
+                                                  ),),
+                                                ],
+                                              ),
+                                            ),
+
+                                            Text(widget.locationWeather[widget.currentPage]
+                                            ['weather']
+                                            [0]['main'] +
+                                                " : " +
+                                                widget.locationWeather[widget
+                                                    .currentPage]['weather']
+                                                [0]
+                                                ['description'],style: TextStyle(
+                                              color: Color(0xFF801EFE),
+                                              fontSize: SizeConfig.safeBlockVertical*2,
+                                            ),),
+                                          ],
+                                        )),
+                                      ),
                                       Padding(
-                                        padding:
-                                        const EdgeInsets.only(top: 8.0, left: 8.0),
-                                        child: Container(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                        padding: const EdgeInsets.only(top:8.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(Icons.fiber_manual_record,color: Colors.amber,size: 15.0,),
+                                            Icon(Icons.fiber_manual_record,color: Colors.grey,size: 10.0,),
+                                            Icon(Icons.fiber_manual_record,color: Colors.grey,size: 10.0,),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      Container(
+                                        width: double.infinity,
+                                        height: SizeConfig.safeBlockVertical*25,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFFF6F7F9),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(-3, -3),
+                                                color:
+                                                Colors.white.withOpacity(.7)),
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(3, 3),
+                                                color:
+                                                Colors.black.withOpacity(.15))
+                                          ],
+                                        ),
+                                        child: Center(child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            RichText(
+                                              text: TextSpan(
+                                                children: <TextSpan>[
+                                                  TextSpan(text: '${this.temperatureMin-2}',style: TextStyle(
+                                                      color: Color(0xFF801EFE),
+                                                      fontSize: SizeConfig.safeBlockVertical*9,
+                                                      fontWeight: FontWeight.w600
+                                                  ),),
+                                                  TextSpan(text: ' °C',style: TextStyle(
+                                                      color: Color(0xFF801EFE),
+                                                      fontSize: SizeConfig.safeBlockVertical*5,
+                                                      fontWeight: FontWeight.w500
+                                                  ),),
+                                                ],
+                                              ),
+                                            ),
+
+                                            Text(AppLocalizations.of(context).tr("mintemp"),style: TextStyle(
+                                              color: Color(0xFF801EFE),
+                                              fontSize: SizeConfig.safeBlockVertical*2,
+                                            ),),
+                                          ],
+                                        )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top:8.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(Icons.fiber_manual_record,color: Colors.grey,size: 10.0,),
+                                            Icon(Icons.fiber_manual_record,color: Colors.amber,size: 15.0,),
+                                            Icon(Icons.fiber_manual_record,color: Colors.grey,size: 10.0,),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      Container(
+                                        width: double.infinity,
+                                        height: SizeConfig.safeBlockVertical*25,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFFF6F7F9),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(-3, -3),
+                                                color:
+                                                Colors.white.withOpacity(.7)),
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(3, 3),
+                                                color:
+                                                Colors.black.withOpacity(.15))
+                                          ],
+                                        ),
+                                        child: Center(child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            RichText(
+                                              text: TextSpan(
+                                                children: <TextSpan>[
+                                                  TextSpan(text: '${this.temperatureMax+2}',style: TextStyle(
+                                                      color: Color(0xFF801EFE),
+                                                      fontSize: SizeConfig.safeBlockVertical*9,
+                                                      fontWeight: FontWeight.w600
+                                                  ),),
+                                                  TextSpan(text: ' °C',style: TextStyle(
+                                                      color: Color(0xFF801EFE),
+                                                      fontSize: SizeConfig.safeBlockVertical*5,
+                                                      fontWeight: FontWeight.w500
+                                                  ),),
+                                                ],
+                                              ),
+                                            ),
+
+                                            Text(AppLocalizations.of(context).tr("maxtemp"),style: TextStyle(
+                                              color: Color(0xFF801EFE),
+                                              fontSize: SizeConfig.safeBlockVertical*2,
+                                            ),),
+                                          ],
+                                        )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top:8.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(Icons.fiber_manual_record,color: Colors.grey,size: 10.0,),
+                                            Icon(Icons.fiber_manual_record,color: Colors.grey,size: 10.0,),
+                                            Icon(Icons.fiber_manual_record,color: Colors.amber,size: 15.0,),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 100,
+                                width: double.infinity,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      card(
+                                          DateTime.parse(
+                                              widget.locationWeather[0]
+                                              ["dt_txt"])
+                                              .day,
+                                          DateTime.parse(
+                                              widget.locationWeather[0]
+                                              ["dt_txt"])
+                                              .month,days[0],0),
+
+                                      card(
+                                          DateTime.parse(
+                                              widget.locationWeather[1]["dt_txt"])
+                                              .day,
+                                          DateTime.parse(
+                                              widget.locationWeather[1]
+                                              ["dt_txt"])
+                                              .month,days[1],1),
+                                      card(
+                                          DateTime.parse(
+                                              widget.locationWeather[2]["dt_txt"])
+                                              .day,
+                                          DateTime.parse(
+                                              widget.locationWeather[2]
+                                              ["dt_txt"])
+                                              .month,days[2],2),
+                                      card(
+                                          DateTime.parse(
+                                              widget.locationWeather[3]["dt_txt"])
+                                              .day,
+                                          DateTime.parse(
+                                              widget.locationWeather[3]
+                                              ["dt_txt"])
+                                              .month,days[3],3),
+                                      card(
+                                          DateTime.parse(
+                                              widget.locationWeather[4]["dt_txt"])
+                                              .day,
+                                          DateTime.parse(
+                                              widget.locationWeather[4]
+                                              ["dt_txt"])
+                                              .month,days[4],4),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text("Additional Info",style: TextStyle(
+                                  color: Color(0xFF4D4D4D),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20.0
+                                ),)
+                              ],
+                            ),
+
+                            Container(
+                              height: SizeConfig.safeBlockVertical*33,
+                              child: PageView(
+                                children: <Widget>[
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFF6F7F9),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(-3, -3),
+                                                color:
+                                                Colors.white.withOpacity(.7)),
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(3, 3),
+                                                color:
+                                                Colors.black.withOpacity(.15)),
+
+                                          ],
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              Text(
-                                                "${widget.weatherDetails['name']}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 22.0),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: <Widget>[
+                                                Row(
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(right:15.0),
+                                                      child: Container(
+                                                        height: 55,
+                                                        width: 55,
+                                                        decoration: BoxDecoration(
+
+                                                            borderRadius: BorderRadius.all(
+                                                                Radius.circular(20.0)),
+                                                            ),
+                                                        child: Icon(
+                                                          FontAwesome.leaf,
+                                                          color: Color(0xFF801EFE),
+                                                          size: 30.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: <Widget>[
+                                                        Text(AppLocalizations.of(context).tr("humidity"),
+                                                            style: TextStyle(
+                                                                fontFamily: "nunito",
+                                                                color: Colors.black,
+                                                                fontWeight: FontWeight.w600,
+                                                                fontSize: 15.0)),
+                                                        Text(
+                                                            "${widget.locationWeather[widget.currentPage]['main']['humidity']}%",
+                                                            style: TextStyle(
+                                                                fontFamily: "nunito",
+                                                                color: Colors.black.withOpacity(.5),
+                                                                fontSize: 15.0))
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right:15.0),
+                                                        child: Container(
+                                                          height: 55,
+                                                          width: 55,
+                                                          decoration: BoxDecoration(
+
+                                                              borderRadius: BorderRadius.all(
+                                                                  Radius.circular(20.0)),
+                                                              ),
+                                                          child: Icon(
+                                                            FontAwesome.compress,
+                                                            color: Color(0xFF801EFE),
+                                                            size: 30.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(AppLocalizations.of(context).tr("Pressure"),
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 15.0)),
+                                                          Text(
+                                                              "${widget.locationWeather[widget.currentPage]['main']['pressure']} Hp",
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black.withOpacity(.5),
+                                                                  fontSize: 15.0))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                              ],),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: <Widget>[
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right:15.0),
+                                                        child: Container(
+                                                          height: 55,
+                                                          width: 55,
+                                                          decoration: BoxDecoration(
+
+                                                              borderRadius: BorderRadius.all(
+                                                                  Radius.circular(20.0)),
+                                                              ),
+                                                          child: Icon(
+                                                            Icons.golf_course,
+                                                            color:Color(0xFF801EFE),
+                                                            size: 30.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(AppLocalizations.of(context).tr("Wind"),
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 15.0)),
+                                                          Text(
+                                                              "${widget.locationWeather[widget.currentPage]['wind']['speed']}",
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black.withOpacity(.5),
+                                                                  fontSize: 15.0))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right:15.0),
+                                                        child: Container(
+                                                          height: 55,
+                                                          width: 55,
+                                                          decoration: BoxDecoration(
+
+                                                              borderRadius: BorderRadius.all(
+                                                                  Radius.circular(20.0)),
+                                                              ),
+                                                          child: Icon(
+                                                            Icons.directions_boat,
+                                                            color: Color(0xFF801EFE),
+                                                            size: 30.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(AppLocalizations.of(context).tr("Sea Level"),
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 15.0)),
+                                                          Text(
+                                                              "${widget.locationWeather[widget.currentPage]['main']['sea_level']}",
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black.withOpacity(.5),
+                                                                  fontSize: 15.0))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Icon(Icons.fiber_manual_record,color: Color(0xFF801EFE),size: 15.0,),
+                                                  Icon(Icons.fiber_manual_record,color: Colors.grey,size: 10.0,),
+                                                ],
                                               ),
                                             ],
                                           ),
                                         ),
                                       ),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                              children: <Widget>[
-                                                Text(
-                                                  AppLocalizations.of(context).tr("weather"),
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight.bold),
-                                                ),
-                                                SizedBox(
-                                                  height: 5.0,
-                                                ),
-                                                Container(
-                                                  height: 55,
-                                                  width: 55,
-                                                  decoration: BoxDecoration(
-                                                      color: Color(0xFFe6ebf2),
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(20.0)),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            blurRadius: 5.0,
-                                                            offset: Offset(-3, -3),
-                                                            color: Colors.white
-                                                                .withOpacity(.7)),
-                                                        BoxShadow(
-                                                            blurRadius: 5.0,
-                                                            offset: Offset(3, 3),
-                                                            color: Colors.black
-                                                                .withOpacity(.15))
-                                                      ]),
-                                                  child: Icon(
-                                                    FontAwesome.mixcloud,
-                                                    color: Colors.black.withOpacity(.5),
-                                                    size: 30.0,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+
+                                    ),
+                                  ),
+                                  Container(
+
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFF6F7F9),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(-3, -3),
+                                                color:
+                                                Colors.white.withOpacity(.7)),
+                                            BoxShadow(
+                                                blurRadius: 5.0,
+                                                offset: Offset(3, 3),
+                                                color:
+                                                Colors.black.withOpacity(.15)),
+
+                                          ],
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              /*(T(°F) - 32) × 5/9*/
-                                              Text("${this.temperature}°C",
-                                                  style: TextStyle(
-                                                      fontFamily: "nunito",
-                                                      fontWeight: FontWeight.w700,
-                                                      color: Colors.black,
-                                                      fontSize: 15.0)),
                                               Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: <Widget>[
-                                                  Text("${this.temperatureMax}°C",
-                                                      style: TextStyle(
-                                                          fontFamily: "nunito",
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.black
-                                                              .withOpacity(.5),
-                                                          fontSize: 15.0)),
-                                                  Text("  ${this.temperatureMin}°C",
-                                                      style: TextStyle(
-                                                          fontFamily: "nunito",
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors.black
-                                                              .withOpacity(.3),
-                                                          fontSize: 15.0)),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right:15.0),
+                                                        child: Container(
+                                                          height: 55,
+                                                          width: 55,
+                                                          decoration: BoxDecoration(
+
+                                                            borderRadius: BorderRadius.all(
+                                                                Radius.circular(20.0)),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesome.sun_o,
+                                                            color: Colors.amber,
+                                                            size: 30.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(AppLocalizations.of(context).tr("Sunset"),
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 15.0)),
+                                                          Text(
+                                                              "${this.sunset}",
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black.withOpacity(.5),
+                                                                  fontSize: 15.0))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right:15.0),
+                                                        child: Container(
+                                                          height: 55,
+                                                          width: 55,
+                                                          decoration: BoxDecoration(
+
+                                                            borderRadius: BorderRadius.all(
+                                                                Radius.circular(20.0)),
+                                                          ),
+                                                          child: Icon(
+                                                            Icons.brightness_6,
+                                                            color: Colors.amber,
+                                                            size: 30.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(AppLocalizations.of(context).tr("sunrise"),
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 15.0)),
+                                                          Text(
+                                                              "${this.sunrise}",
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black.withOpacity(.5),
+                                                                  fontSize: 15.0))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: <Widget>[
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right:15.0),
+                                                        child: Container(
+                                                          height: 55,
+                                                          width: 55,
+                                                          decoration: BoxDecoration(
+
+                                                            borderRadius: BorderRadius.all(
+                                                                Radius.circular(20.0)),
+                                                          ),
+                                                          child: Icon(
+                                                            Icons.hourglass_empty,
+                                                            color:Colors.amber,
+                                                            size: 30.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(AppLocalizations.of(context).tr("solarnoon"),
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 15.0)),
+                                                          Text(
+                                                              "${this.solarnon}",
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black.withOpacity(.5),
+                                                                  fontSize: 15.0))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right:15.0),
+                                                        child: Container(
+                                                          height: 55,
+                                                          width: 55,
+                                                          decoration: BoxDecoration(
+
+                                                            borderRadius: BorderRadius.all(
+                                                                Radius.circular(20.0)),
+                                                          ),
+                                                          child: Icon(
+                                                            Icons.watch_later,
+                                                            color: Colors.amber,
+                                                            size: 30.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(AppLocalizations.of(context).tr("daylength"),
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 15.0)),
+                                                          Text(
+                                                              "${this.dayLength}",
+                                                              style: TextStyle(
+                                                                  fontFamily: "nunito",
+                                                                  color: Colors.black.withOpacity(.5),
+                                                                  fontSize: 15.0))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Icon(Icons.fiber_manual_record,color: Colors.grey,size: 10.0,),
+                                                  Icon(Icons.fiber_manual_record,color: Colors.amber,size: 15.0,),
                                                 ],
-                                              )
+                                              ),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                              widget.locationWeather[widget.currentPage]
-                                              ['weather']
-                                              [0]['main'] +
-                                                  ":" +
-                                                  widget.locationWeather[widget
-                                                      .currentPage]['weather']
-                                                  [0]
-                                                  ['description'],
-                                              style: TextStyle(
-                                                  fontFamily: "nunito"  ,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black,
-                                                  fontSize: 15.0)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 10.0),
-                            child: Container(
-                                height: 90.0,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFe6ebf2),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(-3, -3),
-                                          color: Colors.white.withOpacity(.7)),
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(3, 3),
-                                          color: Colors.black.withOpacity(.15))
-                                    ]),
-                                child: Container(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                        child: Container(
-                                          height: 55,
-                                          width: 55,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFe6ebf2),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(-3, -3),
-                                                    color:
-                                                    Colors.white.withOpacity(.7)),
-                                                BoxShadow(
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(3, 3),
-                                                    color:
-                                                    Colors.black.withOpacity(.15))
-                                              ]),
-                                          child: Icon(
-                                            FontAwesome.leaf,
-                                            color: Colors.black.withOpacity(.5),
-                                            size: 30.0,
-                                          ),
                                         ),
                                       ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(AppLocalizations.of(context).tr("humidity"),
-                                              style: TextStyle(
-                                                  fontFamily: "nunito",
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 15.0)),
-                                          Text(
-                                              "${widget.locationWeather[widget.currentPage]['main']['humidity']}%",
-                                              style: TextStyle(
-                                                  fontFamily: "nunito",
-                                                  color: Colors.black.withOpacity(.5),
-                                                  fontSize: 15.0))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 10.0),
-                            child: Container(
-                                height: 90.0,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFe6ebf2),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(-3, -3),
-                                          color: Colors.white.withOpacity(.7)),
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(3, 3),
-                                          color: Colors.black.withOpacity(.15))
-                                    ]),
-                                child: Container(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                        child: Container(
-                                          height: 55,
-                                          width: 55,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFe6ebf2),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(-3, -3),
-                                                    color:
-                                                    Colors.white.withOpacity(.7)),
-                                                BoxShadow(
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(3, 3),
-                                                    color:
-                                                    Colors.black.withOpacity(.15))
-                                              ]),
-                                          child: Icon(
-                                            FontAwesome.compress,
-                                            color: Colors.black.withOpacity(.5),
-                                            size: 30.0,
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(AppLocalizations.of(context).tr("pressure"),
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "nunito",
-                                                  fontSize: 15.0)),
-                                          Text(
-                                              "${widget.locationWeather[widget.currentPage]['main']['pressure']}",
-                                              style: TextStyle(
-                                                  color: Colors.black.withOpacity(.5),
-                                                  fontFamily: "nunito",
-                                                  fontSize: 15.0))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 10.0),
-                            child: Container(
-                                height: 90.0,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFe6ebf2),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(-3, -3),
-                                          color: Colors.white.withOpacity(.7)),
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(3, 3),
-                                          color: Colors.black.withOpacity(.15))
-                                    ]),
-                                child: Container(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                        child: Container(
-                                          height: 55,
-                                          width: 55,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFe6ebf2),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(-3, -3),
-                                                    color:
-                                                    Colors.white.withOpacity(.7)),
-                                                BoxShadow(
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(3, 3),
-                                                    color:
-                                                    Colors.black.withOpacity(.15))
-                                              ]),
-                                          child: Icon(
-                                            Icons.golf_course,
-                                            color: Colors.black.withOpacity(.5),
-                                            size: 30.0,
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(AppLocalizations.of(context).tr("wind"),
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "nunito",
-                                                  fontSize: 15.0)),
-                                          Text(
-                                              "${widget.locationWeather[widget.currentPage]['wind']['speed']}",
-                                              style: TextStyle(
-                                                  color: Colors.black.withOpacity(.5),
-                                                  fontFamily: "nunito",
-                                                  fontSize: 15.0))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 10.0),
-                            child: Container(
-                                height: 90.0,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFe6ebf2),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(-3, -3),
-                                          color: Colors.white.withOpacity(.7)),
-                                      BoxShadow(
-                                          blurRadius: 5.0,
-                                          offset: Offset(3, 3),
-                                          color: Colors.black.withOpacity(.15))
-                                    ]),
-                                child: Container(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                        child: Container(
-                                          height: 55,
-                                          width: 55,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFe6ebf2),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(-3, -3),
-                                                    color:
-                                                    Colors.white.withOpacity(.7)),
-                                                BoxShadow(
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(3, 3),
-                                                    color:
-                                                    Colors.black.withOpacity(.15))
-                                              ]),
-                                          child: Icon(
-                                            Icons.directions_boat,
-                                            color: Colors.black.withOpacity(.5),
-                                            size: 30.0,
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(AppLocalizations.of(context).tr("seaLevel"),
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "nunito",
-                                                  fontSize: 15.0)),
-                                          Text(
-                                              "${widget.locationWeather[widget.currentPage]['main']['sea_level']}",
-                                              style: TextStyle(
-                                                  color: Colors.black.withOpacity(.5),
-                                                  fontFamily: "nunito",
-                                                  fontSize: 15.0))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.warning,
-                                      color: Colors.red,
-                                      size: 30.0,
-                                    ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(right: 15.0),
-                                    child: Text(
-                                      AppLocalizations.of(context).tr(weatherMessage),
-                                      textAlign: TextAlign.right,
-                                      style: kMessageTextStyle,
+
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Divider(),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(AppLocalizations.of(context).tr("currentTemperature"),
-                                        style: TextStyle(
-                                            color: Colors.black.withOpacity(.5),
-                                            fontFamily: "nunito",
-                                            fontSize: 15.0)),
-                                    Text(
-                                        "${widget.locationWeather[widget.currentPage]['main']['temp']}°K -- ${this.temperature}°C  at   ${widget.locationWeather[widget.currentPage]['dt_txt']} ",
-                                        style: TextStyle(
-                                            color: Colors.black.withOpacity(.6),
-                                            fontFamily: "nunito",
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold)),
-                                    SizedBox(
-                                      height: 20.0,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   )),
@@ -985,43 +1183,215 @@ class _WeatherAppState extends State<WeatherApp> {
         mon = AppLocalizations.of(context).tr("December");
         break;
     }
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: InkWell(
-        onTap: () {
-          for(int i = 0 ; i < days.length ; i++ ){
-            days[i]=false ;
-          }
-          setState(() {
-            widget.currentPage = position ;
+    return InkWell(
+      onTap: () {
+        for(int i = 0 ; i < days.length ; i++ ){
+          days[i]=false ;
+        }
+        setState(() {
+          widget.currentPage = position ;
 
-            days[position] = true ;
-          });
-        },
+          days[position] = true ;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+        //  color: (selected == true)?Colors.grey.shade300:Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "$day, ",
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0,color: Color(0xFFADADBB)),
+            ),
+            Text(
+              "$mon  2020",
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 17.0,color: Color(0xFFADADBB)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget card(int day, int month,bool selected,int position) {
+    String mon = "";
+    switch (month) {
+      case 1:
+        mon = AppLocalizations.of(context).tr("January");
+        break;
+      case 2:
+        mon = AppLocalizations.of(context).tr("February");
+        break;
+      case 3:
+        mon = AppLocalizations.of(context).tr("March");
+        break;
+      case 4:
+        mon = AppLocalizations.of(context).tr("April");
+        break;
+      case 5:
+        mon = AppLocalizations.of(context).tr("May");
+        break;
+      case 6:
+        mon = AppLocalizations.of(context).tr("June");
+        break;
+      case 7:
+        mon = AppLocalizations.of(context).tr("July");
+        break;
+      case 8:
+        mon = AppLocalizations.of(context).tr("Auguest");
+        break;
+      case 9:
+        mon = AppLocalizations.of(context).tr("September");
+        break;
+      case 10:
+        mon = AppLocalizations.of(context).tr("October");
+        break;
+      case 11:
+        mon = AppLocalizations.of(context).tr("November");
+        break;
+      case 12:
+        mon = AppLocalizations.of(context).tr("December");
+        break;
+    }
+    return InkWell(
+      onTap: () {
+        for(int i = 0 ; i < days.length ; i++ ){
+          days[i]=false ;
+        }
+        setState(() {
+          widget.currentPage = position ;
+
+          days[position] = true ;
+
+          sunset = widget.sunSetSunRise[position]['results']['sunset'] ;
+          sunrise = widget.sunSetSunRise[position]['results']['sunrise'];
+          dayLength = widget.sunSetSunRise[position]['results']['day_length'];
+          solarnon = widget.sunSetSunRise[position]['results']['solar_noon'];
+
+        });
+      },
+      child:Padding(
+          padding: const EdgeInsets.only(left:8.0,right: 8.0,bottom: 8.0),
+          child: Container(
+            width: 80,
+            decoration: new BoxDecoration(
+              color: (selected == true)?Color(0xFF801EFE):Color(0xFFF6F7F9),
+            //  color: Color(0xFFFF7F7E),
+              borderRadius: new BorderRadius.all(Radius.circular(5)),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 5.0,
+                    offset: Offset(-3, -3),
+                    color:
+                    Colors.white.withOpacity(.7)),
+                BoxShadow(
+                    blurRadius: 5.0,
+                    offset: Offset(3, 3),
+                    color:
+                    Colors.black.withOpacity(.15))
+              ],
+            ),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("$day ", style: TextStyle(fontSize: 16, color: (selected == true)?Colors.white:Colors.grey, fontWeight: FontWeight.bold),),
+                ),
+                Icon(Icons.wb_cloudy, color: (selected == true)?Colors.white:Colors.grey,),
+                Padding(
+                  padding: const EdgeInsets.only(left:8,top: 8,right: 8,bottom: 0),
+                  child: Text("$mon", style: TextStyle(fontSize: 14, color: (selected == true)?Colors.white:Colors.grey,fontWeight: FontWeight.bold),),
+                )
+              ],
+            ),
+          )
+      ),
+
+      /*
+      * Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Container(
+          width: SizeConfig.safeBlockHorizontal*20,
           decoration: BoxDecoration(
-            color: (selected == true)?Colors.grey.shade300:Colors.white,
+              color: (selected == true)?Colors.grey.shade300:Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
-          width: 100,
-          height: 100,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                "$day",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                "$day, ",
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0,color: Color(0xFFADADBB)),
               ),
               Text(
                 "$mon",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 17.0,color: Color(0xFFADADBB)),
               ),
             ],
           ),
         ),
-      ),
+      ),*/
     );
   }
 }
 
 
+
+/*7
+Container(
+                            width: double.infinity,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  cart(
+                                      DateTime.parse(
+                                          widget.locationWeather[0]
+                                          ["dt_txt"])
+                                          .day,
+                                      DateTime.parse(
+                                          widget.locationWeather[0]
+                                          ["dt_txt"])
+                                          .month,days[0],0),
+
+                                  cart(
+                                      DateTime.parse(
+                                          widget.locationWeather[1]["dt_txt"])
+                                          .day,
+                                      DateTime.parse(
+                                          widget.locationWeather[1]
+                                          ["dt_txt"])
+                                          .month,days[1],1),
+                                  cart(
+                                      DateTime.parse(
+                                          widget.locationWeather[2]["dt_txt"])
+                                          .day,
+                                      DateTime.parse(
+                                          widget.locationWeather[2]
+                                          ["dt_txt"])
+                                          .month,days[2],2),
+                                  cart(
+                                      DateTime.parse(
+                                          widget.locationWeather[3]["dt_txt"])
+                                          .day,
+                                      DateTime.parse(
+                                          widget.locationWeather[3]
+                                          ["dt_txt"])
+                                          .month,days[3],3),
+                                  cart(
+                                      DateTime.parse(
+                                          widget.locationWeather[4]["dt_txt"])
+                                          .day,
+                                      DateTime.parse(
+                                          widget.locationWeather[4]
+                                          ["dt_txt"])
+                                          .month,days[4],4),
+                                ],
+                              ),
+                            ),
+                          ),
+* */

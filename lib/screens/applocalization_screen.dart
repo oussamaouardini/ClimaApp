@@ -60,40 +60,63 @@ List<Marker> markers ;
     return  EasyLocalizationProvider(
       data: data,
       child: Scaffold(
-        appBar: new AppBar(
-          title: new Text(AppLocalizations.of(context).tr("Location")),
-        ),
-        body: new Container(
-            padding: new EdgeInsets.all(8.0),
-            child: Stack(
-              children: <Widget>[
-                new Column(
-                  children: <Widget>[
-                    new Flexible(
-                        child: new FlutterMap(
-                          mapController:mapController ,
-                          options: new MapOptions(
-                            center: new LatLng(41.8781, -87.6298),
-                            zoom: 12.0,
-                          ),
-                          layers: [
-                            new TileLayerOptions(
-                              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                              subdomains: ['a', 'b', 'c'],
-                            ),
-                            MarkerLayerOptions(
-                              markers: markers
-                            )
-                          ],
-                        )
-                    )
-                  ],
+        bottomNavigationBar: Container(
+          height: SizeConfig.blockSizeVertical*8,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+
+              Padding(
+                padding: const EdgeInsets.only(right:15.0),
+                child: IconButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.wb_cloudy,color:Colors.grey ,size: 40.0,),
                 ),
-                Positioned(child:IconButton(icon: Icon(Icons.pin_drop,color: Colors.red,size: 50.0,), onPressed: (){
-                  mapController.move(coords.values.elementAt(0), 10.0);
-                }),top: 0,left:0 ,)
-              ],
-            )
+              ),
+              IconButton(
+                onPressed: () async{
+                 },
+                icon: Icon(Icons.public,color: Color(0xFF801EFE),size: 40.0,),
+              ),
+
+            ],
+          ),
+        ),
+        body: SafeArea(
+          child: new Container(
+              padding: new EdgeInsets.all(8.0),
+              child: Stack(
+                children: <Widget>[
+                  new Column(
+                    children: <Widget>[
+                      new Flexible(
+                          child: new FlutterMap(
+                            mapController:mapController ,
+                            options: new MapOptions(
+                              center: new LatLng(41.8781, -87.6298),
+                              zoom: 12.0,
+                            ),
+                            layers: [
+                              new TileLayerOptions(
+                                urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                subdomains: ['a', 'b', 'c'],
+                              ),
+                              MarkerLayerOptions(
+                                markers: markers
+                              )
+                            ],
+                          )
+                      )
+                    ],
+                  ),
+                  Positioned(child:IconButton(icon: Icon(Icons.pin_drop,color: Colors.red,size: 50.0,), onPressed: (){
+                    mapController.move(coords.values.elementAt(0), 10.0);
+                  }),top: 0,left:0 ,)
+                ],
+              )
+          ),
         ),
       ),
     );

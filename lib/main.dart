@@ -8,6 +8,7 @@ import 'package:clima/screens/loading_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+
 import 'model/item.dart';
 
 List<Item> list = <Item>[
@@ -60,22 +61,28 @@ class _LoadingWeatherState extends State<LoadingWeather> {
     DateTime dt = DateTime.parse(weatherData['list'][0]["dt_txt"]);
 
     List<dynamic> dates = [];
+    List<dynamic> sunData = [];
 
     for (int i = 0; i < dr; i++) {
       var date =
           dt.difference(DateTime.parse(weatherData['list'][i]["dt_txt"]));
+
       if (date.inHours % 24 == 0) {
+
         dates.add(weatherData['list'][i]);
+         final response = await WeatherModel().getSunsetSunRise(DateTime.parse(weatherData['list'][i]["dt_txt"]));
+        sunData.add(response);
       }
     }
     var weatherDetail = await WeatherModel().getLocationWeather();
-      Navigator.push(context, MaterialPageRoute(builder:(context)=> Weather(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,) ));
+      //Navigator.push(context, MaterialPageRoute(builder:(context)=> Wea(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,sunSetSunRise: sunData,) ));
+    Navigator.push(context, MaterialPageRoute(builder:(context)=> WeatherApp(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,sunSetSunRise: sunData,) ));
+
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-  //  getLocationData();
     return Scaffold(
       backgroundColor: Color(0xFFb0bec5),
         body: SafeArea(

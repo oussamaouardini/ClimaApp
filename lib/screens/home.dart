@@ -1,7 +1,9 @@
+import 'package:clima/screens/secScreen.dart';
 import 'package:clima/utilities/imports.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 
 
 class Weather extends StatefulWidget {
@@ -9,8 +11,9 @@ class Weather extends StatefulWidget {
   dynamic locationWeather;
   dynamic weatherDetails;
   int currentPage;
+  dynamic sunSetSunRise;
 
-  Weather({this.locationWeather, this.currentPage, this.weatherDetails});
+  Weather({this.locationWeather, this.currentPage, this.weatherDetails,this.sunSetSunRise});
 
   @override
   _WeatherState createState() => _WeatherState();
@@ -31,17 +34,29 @@ class _WeatherState extends State<Weather> {
 
   String weatherIcon;
 
+  String sunset;
+  String sunrise;
+  String dayLength;
+
   String cityName;
   WeatherModel weatherModel = WeatherModel();
   String weatherMessage;
-  void updateUI(dynamic weather) {
+  void updateUI(dynamic weather) async {
     if (widget.weatherDetails == null) {
       temperature = 0;
       weatherIcon = 'Eroor ';
       cityName = '';
       weatherMessage = 'Unable to get weather data';
+      sunset = "0" ;
+      sunrise = "0";
+      dayLength = "0";
       return;
     } else {
+
+       sunset = widget.sunSetSunRise[0]['results']['sunset'] ;
+       sunrise = widget.sunSetSunRise[0]['results']['sunrise'];
+       dayLength = widget.sunSetSunRise[0]['results']['day_length'];
+
       try {
         double temp = weather['main']['temp'];
         temperature = temp.toInt();
@@ -155,9 +170,11 @@ class _WeatherState extends State<Weather> {
   }
   var focusNode = new FocusNode();
 
+
+
   @override
   Widget build(BuildContext context) {
-    updateUI(widget.weatherDetails);
+  //  updateUI(widget.weatherDetails);
     SizeConfig().init(context);
     var data = EasyLocalizationProvider.of(context).data;
     return EasyLocalizationProvider(
@@ -168,7 +185,7 @@ class _WeatherState extends State<Weather> {
           onPanUpdate: (details){
             if(details.delta.dx < 0)
             {
-            //  Navigator.push(context, MaterialPageRoute(builder: (context) => Stats()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Stats(humidity: "${widget.locationWeather[widget.currentPage]['main']['humidity']}",windSpeed: "${widget.locationWeather[widget.currentPage]['wind']['speed']}",windDeg:"${widget.locationWeather[widget.currentPage]['wind']['deg']}" ,) ));
             }
           },
           child: Scaffold(
@@ -176,12 +193,16 @@ class _WeatherState extends State<Weather> {
             body: Column(
               children: <Widget>[
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top:15.0),
+                      child: IconButton(icon: Icon(Icons.near_me,color: Colors.black,),onPressed: (){
+                      },),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top:15.0),
                       child: IconButton(icon: Icon(Icons.more_vert,color: Colors.black,),onPressed: (){
-                        print('object');
                       },),
                     ),
                   ],
@@ -258,234 +279,112 @@ class _WeatherState extends State<Weather> {
                   ),
                 ),
                 Container(
-                    margin: EdgeInsets.symmetric(vertical: 20.0),
-                    height: 90,
-                    child: new ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Container(
-                            width: 50,
-                            decoration: new BoxDecoration(
-                              color: Color(0xFFFF7F7E),
-                              borderRadius: new BorderRadius.all(Radius.circular(5)),
-                            ),
+                  decoration: new BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: new BorderRadius.only(topLeft: Radius.circular(20.0),topRight: Radius.circular(20.0)),
+//                      boxShadow: [BoxShadow(
+//                        color: Colors.grey.shade200,
+//                        blurRadius: 9.0,
+//                      ),]
+                  ),
+                    margin: EdgeInsets.only(top:8.0,right: 8.0,left: 8.0),
+                    height: 100,
+                    width: 500,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Now", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),),
-                                ),
-                                Icon(Icons.wb_cloudy, color: Colors.white,),
-                                Padding(
-                                  padding: const EdgeInsets.only(left:8,top: 8,right: 8,bottom: 0),
-                                  child: Text("24", style: TextStyle(fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),),
-                                )
+                                Text("${this.sunrise}"),
+                                Text('SunRise'),
                               ],
                             ),
                           ),
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(left:8.0),
-                            child: Container(
-                              width: 80,
-                              decoration: new BoxDecoration(
-                                color: Color(0xFFFF7F7E),
-                                borderRadius: new BorderRadius.all(Radius.circular(5)),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("5:00 PM", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),),
-                                  ),
-                                  Icon(Icons.wb_cloudy, color: Colors.white,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:8,top: 8,right: 8,bottom: 0),
-                                    child: Text("24", style: TextStyle(fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),),
-                                  )
-                                ],
-                              ),
-                            )
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(left:8.0),
-                            child: Container(
-                              width: 80,
-                              decoration: new BoxDecoration(
-                                color: Color(0xFF463B97),
-                                borderRadius: new BorderRadius.all(Radius.circular(5)),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("5:00 PM", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),),
-                                  ),
-                                  Icon(Icons.wb_cloudy, color: Colors.white,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:8,top: 8,right: 8,bottom: 0),
-                                    child: Text("24", style: TextStyle(fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),),
-                                  )
-                                ],
-                              ),
-                            )
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(left:8.0),
-                            child: Container(
-                              width: 80,
-                              decoration: new BoxDecoration(
-                                color: Color(0xFF463B97),
-                                borderRadius: new BorderRadius.all(Radius.circular(5)),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("5:00 PM", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),),
-                                  ),
-                                  Icon(Icons.wb_cloudy, color: Colors.white,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:8,top: 8,right: 8,bottom: 0),
-                                    child: Text("24", style: TextStyle(fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),),
-                                  )
-                                ],
-                              ),
-                            )
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(left:8.0),
-                            child: Container(
-                              width: 80,
-                              decoration: new BoxDecoration(
-                                color: Color(0xFF463B97),
-                                borderRadius: new BorderRadius.all(Radius.circular(5)),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("5:00 PM", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),),
-                                  ),
-                                  Icon(Icons.wb_cloudy, color: Colors.white,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:8,top: 8,right: 8,bottom: 0),
-                                    child: Text("24", style: TextStyle(fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),),
-                                  )
-                                ],
-                              ),
-                            )
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(left:8.0),
-                            child: Container(
-                              width: 80,
-                              decoration: new BoxDecoration(
-                                color: Color(0xFF463B97),
-                                borderRadius: new BorderRadius.all(Radius.circular(5)),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("5:00 PM", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),),
-                                  ),
-                                  Icon(Icons.wb_cloudy, color: Colors.white,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:8,top: 8,right: 8,bottom: 0),
-                                    child: Text("24", style: TextStyle(fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),),
-                                  )
-                                ],
-                              ),
-                            )
-                        ),
-                      ],
-                    )
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left :10.0,top: 0,right: 10.0,bottom: 0),
-                  child: Container(
-                      height: 200,
-                      width: 500,
-                      decoration: new BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left:14.0,top:15.0,right: 0.0,bottom: 15.0),
-                                child: Text("Tomorrow, 11 Dec",style: TextStyle(fontSize: 18,color: Color(0xFF696969)),),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left:65.0,top: 15.0,right: 60.0,bottom: 15.0),
-                                child: Icon(Icons.cloud_queue,size: 30,color: Color(0xFF696969)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 0.0,top: 15.0,right: 8.0,bottom: 15.0),
-                                child: Text("26/18",style: TextStyle(fontSize: 18,color: Color(0xFF696969))),
-                              )
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text("${this.sunset}"),
+                                Text('SunSet'),
+                              ],
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left:14.0,right: 0.0,bottom: 15.0),
-                                child: Text("Thu, 12 Dec",style: TextStyle(fontSize: 18,color: Color(0xFF696969)),),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 15.0,left: 50),
-                                child: Icon(Icons.cloud_queue,size: 30,color: Color(0xFF696969)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 0.0,right: 8.0,bottom: 15.0),
-                                child: Text("26/18",style: TextStyle(fontSize: 18,color: Color(0xFF696969))),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left:14.0,right: 0.0,bottom: 15.0),
-                                child: Text("Fri, 12 Dec",style: TextStyle(fontSize: 18,color: Color(0xFF696969)),),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 15.0,left: 60),
-                                child: Icon(Icons.cloud_queue,size: 30,color: Color(0xFF696969)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 0.0,right: 8.0,bottom: 15.0),
-                                child: Text("26/18",style: TextStyle(fontSize: 18,color: Color(0xFF696969))),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left:14.0,right: 0.0,bottom: 15.0),
-                                child: Text("Sat, 12 Dec",style: TextStyle(fontSize: 18,color: Color(0xFF696969)),),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 15.0,left: 50),
-                                child: Icon(Icons.cloud_queue,size: 30,color: Color(0xFF696969)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 0.0,right: 8.0,bottom: 15.0),
-                                child: Text("26/18",style: TextStyle(fontSize: 18,color: Color(0xFF696969))),
-                              )
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text("${this.dayLength}"),
+                                Text('Day Length'),
+                              ],
+                            ),
                           ),
                         ],
-                      )
-                  ),
+                      ),
+                    )
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 0.0),
+                    height: 220,
+                    width: 500,
+                    margin: EdgeInsets.only(right: 8.0,left: 8.0),
+                    decoration: new BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: new BorderRadius.only(bottomLeft: Radius.circular(20.0),bottomRight: Radius.circular(20.0)),
+                    ),
+                    child: ListView(
+                    //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        cart(
+                            DateTime.parse(
+                                widget.locationWeather[0]
+                                ["dt_txt"])
+                                .day,
+                            DateTime.parse(
+                                widget.locationWeather[0]
+                                ["dt_txt"])
+                                .month,days[0],0),
+
+                        cart(
+                            DateTime.parse(
+                                widget.locationWeather[1]["dt_txt"])
+                                .day,
+                            DateTime.parse(
+                                widget.locationWeather[1]
+                                ["dt_txt"])
+                                .month,days[1],1),
+                        cart(
+                            DateTime.parse(
+                                widget.locationWeather[2]["dt_txt"])
+                                .day,
+                            DateTime.parse(
+                                widget.locationWeather[2]
+                                ["dt_txt"])
+                                .month,days[2],2),
+                        cart(
+                            DateTime.parse(
+                                widget.locationWeather[3]["dt_txt"])
+                                .day,
+                            DateTime.parse(
+                                widget.locationWeather[3]
+                                ["dt_txt"])
+                                .month,days[3],3),
+                        cart(
+                            DateTime.parse(
+                                widget.locationWeather[4]["dt_txt"])
+                                .day,
+                            DateTime.parse(
+                                widget.locationWeather[4]
+                                ["dt_txt"])
+                                .month,days[4],4),
+                      ],
+                    )
                 ),
                 Center(
                   child: Container(
@@ -505,6 +404,117 @@ class _WeatherState extends State<Weather> {
             ),
           ),
         ),
+      ),
+    );
+  }
+  Widget cart(int day, int month,bool selected,int position) {
+    String mon = "";
+    switch (month) {
+      case 1:
+        mon = AppLocalizations.of(context).tr("January");
+        break;
+      case 2:
+        mon = AppLocalizations.of(context).tr("February");
+        break;
+      case 3:
+        mon = AppLocalizations.of(context).tr("March");
+        break;
+      case 4:
+        mon = AppLocalizations.of(context).tr("April");
+        break;
+      case 5:
+        mon = AppLocalizations.of(context).tr("May");
+        break;
+      case 6:
+        mon = AppLocalizations.of(context).tr("June");
+        break;
+      case 7:
+        mon = AppLocalizations.of(context).tr("July");
+        break;
+      case 8:
+        mon = AppLocalizations.of(context).tr("Auguest");
+        break;
+      case 9:
+        mon = AppLocalizations.of(context).tr("September");
+        break;
+      case 10:
+        mon = AppLocalizations.of(context).tr("October");
+        break;
+      case 11:
+        mon = AppLocalizations.of(context).tr("November");
+        break;
+      case 12:
+        mon = AppLocalizations.of(context).tr("December");
+        break;
+    }
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () {
+          for(int i = 0 ; i < days.length ; i++ ){
+            days[i]=false ;
+          }
+          setState(() {
+
+            widget.currentPage = position ;
+            this.sunset = widget.sunSetSunRise[position]['results']['sunset'] ;
+            this.sunrise = widget.sunSetSunRise[position]['results']['sunrise'];
+            this.dayLength = widget.sunSetSunRise[position]['results']['day_length'];
+
+            days[position] = true ;
+          });
+        },
+        child:Container(
+          decoration: BoxDecoration(
+            color: (selected == true)?Colors.grey.shade300:Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left:14.0,right: 0.0,bottom: 15.0),
+                child: Text("$day / $mon ",style: TextStyle(fontSize: 18,color: Color(0xFF696969)),),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0,left: 50),
+                child: Icon(Icons.cloud_queue,size: 30,color: Color(0xFF696969)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 0.0,right: 8.0,bottom: 15.0),
+                child: Text("26/18",style: TextStyle(fontSize: 18,color: Color(0xFF696969))),
+              )
+            ],
+          ),
+        )
+
+
+
+
+
+
+
+        /* Container(
+          decoration: BoxDecoration(
+            color: (selected == true)?Colors.grey.shade300:Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          width: 100,
+          height: 100,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text(
+                "$day",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+              Text(
+                "$mon",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+            ],
+          ),
+        ),*/
       ),
     );
   }

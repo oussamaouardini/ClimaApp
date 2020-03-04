@@ -43,6 +43,15 @@ class WeatherModel {
     return weatherData ;
   }
 
+  Future<dynamic> getSunsetSunRise(DateTime dt) async {
+    Location location = Location();
+    await location.getCurrentLocation();
+    NetworkHelper networkHelper = NetworkHelper("$sunDetails?lat=${location.latitude}&lng=${location.latitude}&date=$dt");
+    //https://api.sunrise-sunset.org/json?lat=36.7201600&lng=-4.4203400&date=2020-03-04
+    var sunData = await networkHelper.getData();
+    return sunData ;
+  }
+
 
   String getWeatherIcon(int condition) {
     if (condition < 300) {

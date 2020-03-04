@@ -33,5 +33,11 @@
   "October": "أكتوبر",
   "November": "نونبر",
   "December": "دجنبر",
-  "Location": "موقعي"
+  "Location": "موقعي",
+  "Sunset": "الشروق",
+  "sunrise": "الغروب",
+  "solarnoon": "وسط النهار",
+  "daylength": "طول اليوم",
+  "mintemp": "الحرارة الدنيا",
+  "maxtemp": "الحرارة العليا"
 }

@@ -23,6 +23,8 @@ const kConditionTextStyle = TextStyle(
 
 
 const apiKey = "292c6308e138b3b9f8915ffceb26adf4";
+const sunDetails = "https://api.sunrise-sunset.org/json" ;
+
 const openWeatherMapURL = "https://api.openweathermap.org/data/2.5/weather";
 const openWeatherMapUrlForecast = "https://api.openweathermap.org/data/2.5/forecast";
 const  kTextFieldInputDecoration = InputDecoration(
