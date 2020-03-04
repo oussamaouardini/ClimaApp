@@ -897,46 +897,8 @@ class _WeatherAppState extends State<WeatherApp> {
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: <Widget>[
-                                                Row(
-                                                  children: <Widget>[
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(right:15.0),
-                                                      child: Container(
-                                                        height: 55,
-                                                        width: 55,
-                                                        decoration: BoxDecoration(
-
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(20.0)),
-                                                            ),
-                                                        child: Icon(
-                                                          FontAwesome.leaf,
-                                                          color: Color(0xFF801EFE),
-                                                          size: 30.0,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: <Widget>[
-                                                        Text(AppLocalizations.of(context).tr("humidity"),
-                                                            style: TextStyle(
-                                                                fontFamily: "nunito",
-                                                                color: Colors.black,
-                                                                fontWeight: FontWeight.w600,
-                                                                fontSize: 15.0)),
-                                                        Text(
-                                                            "${widget.locationWeather[widget.currentPage]['main']['humidity']}%",
-                                                            style: TextStyle(
-                                                                fontFamily: "nunito",
-                                                                color: Colors.black.withOpacity(.5),
-                                                                fontSize: 15.0))
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                  Row(
+                                                Expanded(
+                                                  child: Row(
                                                     children: <Widget>[
                                                       Padding(
                                                         padding: const EdgeInsets.only(right:15.0),
@@ -949,7 +911,7 @@ class _WeatherAppState extends State<WeatherApp> {
                                                                   Radius.circular(20.0)),
                                                               ),
                                                           child: Icon(
-                                                            FontAwesome.compress,
+                                                            FontAwesome.leaf,
                                                             color: Color(0xFF801EFE),
                                                             size: 30.0,
                                                           ),
@@ -959,14 +921,14 @@ class _WeatherAppState extends State<WeatherApp> {
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: <Widget>[
-                                                          Text(AppLocalizations.of(context).tr("Pressure"),
+                                                          Text(AppLocalizations.of(context).tr("humidity"),
                                                               style: TextStyle(
                                                                   fontFamily: "nunito",
                                                                   color: Colors.black,
                                                                   fontWeight: FontWeight.w600,
                                                                   fontSize: 15.0)),
                                                           Text(
-                                                              "${widget.locationWeather[widget.currentPage]['main']['pressure']} Hp",
+                                                              "${widget.locationWeather[widget.currentPage]['main']['humidity']}%",
                                                               style: TextStyle(
                                                                   fontFamily: "nunito",
                                                                   color: Colors.black.withOpacity(.5),
@@ -975,87 +937,133 @@ class _WeatherAppState extends State<WeatherApp> {
                                                       ),
                                                     ],
                                                   ),
+                                                ),
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right:15.0),
+                                                          child: Container(
+                                                            height: 55,
+                                                            width: 55,
+                                                            decoration: BoxDecoration(
+
+                                                              borderRadius: BorderRadius.all(
+                                                                  Radius.circular(20.0)),
+                                                            ),
+                                                            child: Icon(
+                                                              FontAwesome.compress,
+                                                              color: Color(0xFF801EFE),
+                                                              size: 30.0,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(AppLocalizations.of(context).tr("Pressure"),
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 15.0)),
+                                                            Text(
+                                                                "${widget.locationWeather[widget.currentPage]['main']['pressure']} Hp",
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black.withOpacity(.5),
+                                                                    fontSize: 15.0))
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
                                               ],),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(right:15.0),
-                                                        child: Container(
-                                                          height: 55,
-                                                          width: 55,
-                                                          decoration: BoxDecoration(
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right:15.0),
+                                                          child: Container(
+                                                            height: 55,
+                                                            width: 55,
+                                                            decoration: BoxDecoration(
 
-                                                              borderRadius: BorderRadius.all(
-                                                                  Radius.circular(20.0)),
-                                                              ),
-                                                          child: Icon(
-                                                            Icons.golf_course,
-                                                            color:Color(0xFF801EFE),
-                                                            size: 30.0,
+                                                                borderRadius: BorderRadius.all(
+                                                                    Radius.circular(20.0)),
+                                                                ),
+                                                            child: Icon(
+                                                              Icons.golf_course,
+                                                              color:Color(0xFF801EFE),
+                                                              size: 30.0,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Text(AppLocalizations.of(context).tr("Wind"),
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 15.0)),
-                                                          Text(
-                                                              "${widget.locationWeather[widget.currentPage]['wind']['speed']}",
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black.withOpacity(.5),
-                                                                  fontSize: 15.0))
-                                                        ],
-                                                      ),
-                                                    ],
+                                                        Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(AppLocalizations.of(context).tr("Wind"),
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 15.0)),
+                                                            Text(
+                                                                "${widget.locationWeather[widget.currentPage]['wind']['speed']}",
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black.withOpacity(.5),
+                                                                    fontSize: 15.0))
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(right:15.0),
-                                                        child: Container(
-                                                          height: 55,
-                                                          width: 55,
-                                                          decoration: BoxDecoration(
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right:15.0),
+                                                          child: Container(
+                                                            height: 55,
+                                                            width: 55,
+                                                            decoration: BoxDecoration(
 
-                                                              borderRadius: BorderRadius.all(
-                                                                  Radius.circular(20.0)),
-                                                              ),
-                                                          child: Icon(
-                                                            Icons.directions_boat,
-                                                            color: Color(0xFF801EFE),
-                                                            size: 30.0,
+                                                                borderRadius: BorderRadius.all(
+                                                                    Radius.circular(20.0)),
+                                                                ),
+                                                            child: Icon(
+                                                              Icons.directions_boat,
+                                                              color: Color(0xFF801EFE),
+                                                              size: 30.0,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Text(AppLocalizations.of(context).tr("Sea Level"),
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 15.0)),
-                                                          Text(
-                                                              "${widget.locationWeather[widget.currentPage]['main']['sea_level']}",
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black.withOpacity(.5),
-                                                                  fontSize: 15.0))
-                                                        ],
-                                                      ),
-                                                    ],
+                                                        Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(AppLocalizations.of(context).tr("Sea Level"),
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 15.0)),
+                                                            Text(
+                                                                "${widget.locationWeather[widget.currentPage]['main']['sea_level']}",
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black.withOpacity(.5),
+                                                                    fontSize: 15.0))
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],),
                                               Row(
@@ -1075,7 +1083,7 @@ class _WeatherAppState extends State<WeatherApp> {
                                   Container(
 
                                     child: Padding(
-                                      padding: const EdgeInsets.all(20.0),
+                                      padding: const EdgeInsets.only(bottom:20.0,left:10.0,right:10.0),
                                       child: Container(
                                         decoration: BoxDecoration(
                                           color: Color(0xFFF6F7F9),
@@ -1103,166 +1111,174 @@ class _WeatherAppState extends State<WeatherApp> {
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(right:15.0),
-                                                        child: Container(
-                                                          height: 55,
-                                                          width: 55,
-                                                          decoration: BoxDecoration(
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right:15.0),
+                                                          child: Container(
+                                                            height: 55,
+                                                            width: 55,
+                                                            decoration: BoxDecoration(
 
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(20.0)),
-                                                          ),
-                                                          child: Icon(
-                                                            FontAwesome.sun_o,
-                                                            color: Colors.amber,
-                                                            size: 30.0,
+                                                              borderRadius: BorderRadius.all(
+                                                                  Radius.circular(20.0)),
+                                                            ),
+                                                            child: Icon(
+                                                              FontAwesome.sun_o,
+                                                              color: Colors.amber,
+                                                              size: 30.0,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Text(AppLocalizations.of(context).tr("Sunset"),
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 15.0)),
-                                                          Text(
-                                                              "${this.sunset}",
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black.withOpacity(.5),
-                                                                  fontSize: 15.0))
-                                                        ],
-                                                      ),
-                                                    ],
+                                                        Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(AppLocalizations.of(context).tr("Sunset"),
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 15.0)),
+                                                            Text(
+                                                                "${this.sunset}",
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black.withOpacity(.5),
+                                                                    fontSize: 15.0))
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(right:15.0),
-                                                        child: Container(
-                                                          height: 55,
-                                                          width: 55,
-                                                          decoration: BoxDecoration(
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right:15.0),
+                                                          child: Container(
+                                                            height: 55,
+                                                            width: 55,
+                                                            decoration: BoxDecoration(
 
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(20.0)),
-                                                          ),
-                                                          child: Icon(
-                                                            Icons.brightness_6,
-                                                            color: Colors.amber,
-                                                            size: 30.0,
+                                                              borderRadius: BorderRadius.all(
+                                                                  Radius.circular(20.0)),
+                                                            ),
+                                                            child: Icon(
+                                                              Icons.brightness_6,
+                                                              color: Colors.amber,
+                                                              size: 30.0,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Text(AppLocalizations.of(context).tr("sunrise"),
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 15.0)),
-                                                          Text(
-                                                              "${this.sunrise}",
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black.withOpacity(.5),
-                                                                  fontSize: 15.0))
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
+                                                        Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(AppLocalizations.of(context).tr("sunrise"),
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 15.0)),
+                                                            Text(
+                                                                "${this.sunrise}",
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black.withOpacity(.5),
+                                                                    fontSize: 15.0))
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
                                                 ],),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(right:15.0),
-                                                        child: Container(
-                                                          height: 55,
-                                                          width: 55,
-                                                          decoration: BoxDecoration(
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right:1.0),
+                                                          child: Container(
+                                                            height: 55,
+                                                            width: 55,
+                                                            decoration: BoxDecoration(
 
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(20.0)),
-                                                          ),
-                                                          child: Icon(
-                                                            Icons.hourglass_empty,
-                                                            color:Colors.amber,
-                                                            size: 30.0,
+                                                              borderRadius: BorderRadius.all(
+                                                                  Radius.circular(20.0)),
+                                                            ),
+                                                            child: Icon(
+                                                              Icons.hourglass_empty,
+                                                              color:Colors.amber,
+                                                              size: 30.0,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Text(AppLocalizations.of(context).tr("solarnoon"),
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 15.0)),
-                                                          Text(
-                                                              "${this.solarnon}",
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black.withOpacity(.5),
-                                                                  fontSize: 15.0))
-                                                        ],
-                                                      ),
-                                                    ],
+                                                        Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(AppLocalizations.of(context).tr("solarnoon"),
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 15.0)),
+                                                            Text(
+                                                                "${this.solarnon}",
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black.withOpacity(.5),
+                                                                    fontSize: 15.0))
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(right:15.0),
-                                                        child: Container(
-                                                          height: 55,
-                                                          width: 55,
-                                                          decoration: BoxDecoration(
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right:15.0),
+                                                          child: Container(
+                                                            height: 55,
+                                                            width: 55,
+                                                            decoration: BoxDecoration(
 
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(20.0)),
-                                                          ),
-                                                          child: Icon(
-                                                            Icons.watch_later,
-                                                            color: Colors.amber,
-                                                            size: 30.0,
+                                                              borderRadius: BorderRadius.all(
+                                                                  Radius.circular(20.0)),
+                                                            ),
+                                                            child: Icon(
+                                                              Icons.watch_later,
+                                                              color: Colors.amber,
+                                                              size: 30.0,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Text(AppLocalizations.of(context).tr("daylength"),
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 15.0)),
-                                                          Text(
-                                                              "${this.dayLength}",
-                                                              style: TextStyle(
-                                                                  fontFamily: "nunito",
-                                                                  color: Colors.black.withOpacity(.5),
-                                                                  fontSize: 15.0))
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
+                                                        Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(AppLocalizations.of(context).tr("daylength"),
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 15.0)),
+                                                            Text(
+                                                                "${this.dayLength}",
+                                                                style: TextStyle(
+                                                                    fontFamily: "nunito",
+                                                                    color: Colors.black.withOpacity(.5),
+                                                                    fontSize: 15.0))
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
                                                 ],),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.center,
