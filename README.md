@@ -12,7 +12,7 @@ so that users in the Middle East and Arab countries can use this app easily  and
 The mobile application uses the OpenWeatherMap webservice which provides weather data.
 
 
-## Screen
+## Screens
 
-
+![climate](https://user-images.githubusercontent.com/51085405/98417612-9190fb80-2081-11eb-96fe-bbfc29b64b17.png)
 
