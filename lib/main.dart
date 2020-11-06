@@ -104,7 +104,6 @@ class _LoadingWeatherState extends State<LoadingWeather> {
       }
     }
     var weatherDetail = await WeatherModel().getLocationWeather();
-      //Navigator.push(context, MaterialPageRoute(builder:(context)=> Wea(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,sunSetSunRise: sunData,) ));
     Navigator.push(context, MaterialPageRoute(builder:(context)=> WeatherApp(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,sunSetSunRise: sunData,) ));
 
   }
@@ -155,8 +154,8 @@ class _LoadingWeatherState extends State<LoadingWeather> {
                 noPer == true?Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InkWell(
                         onTap:()async{
