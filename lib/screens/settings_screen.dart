@@ -1,6 +1,5 @@
 import 'package:clima/screens/applocalization_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:clima/screens/location_screen.dart';
 import 'package:clima/utilities/imports.dart';
 import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 

@@ -1,4 +1,3 @@
-import 'package:clima/screens/weather.dart';
 import 'package:flutter/material.dart';
 
 const kTempTextStyle = TextStyle(

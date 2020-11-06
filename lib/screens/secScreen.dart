@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+// ignore: must_be_immutable
 class Stats extends StatefulWidget {
   String humidity ;
   String windSpeed ;

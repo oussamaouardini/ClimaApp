@@ -1,10 +1,10 @@
-import 'package:clima/services/location.dart';
 import 'package:clima/utilities/imports.dart';
 import 'package:easy_localization/easy_localization_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
+// ignore: must_be_immutable
 class AppLocalization extends StatefulWidget {
   dynamic latitude;
   dynamic longitude;
@@ -41,17 +41,7 @@ List<Marker> markers ;
     super.initState();
   }
 
-  void _showCoords(int index){
-  mapController.move(coords.values.elementAt(index), 10.0);
-  }
-  List<Widget> _makeButtons(){
-    List<Widget> list = new List<Widget>();
 
-    for(int i = 0 ; i < coords.length ;  i++){
-      list.add(RaisedButton(onPressed: ()=>_showCoords(i),child: Text(coords.keys.elementAt(i)),));
-    }
-    return list;
-  }
 
   @override
   Widget build(BuildContext context) {

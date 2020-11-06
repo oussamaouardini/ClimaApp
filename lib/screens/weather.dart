@@ -1,13 +1,13 @@
 import 'package:clima/screens/applocalization_screen.dart';
-import 'package:clima/screens/settings_screen.dart';
 import 'package:clima/services/weather.dart';
-import 'package:clima/utilities/constants.dart';
 import 'package:clima/utilities/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 import 'package:clima/utilities/imports.dart';
+import '../utilities/size_config.dart';
+
+// ignore: must_be_immutable
 class WeatherApp extends StatefulWidget {
   dynamic locationWeather;
   dynamic weatherDetails;
@@ -218,181 +218,6 @@ class _WeatherAppState extends State<WeatherApp> {
                     ],
                   ),
                 ),
-                /*  bottomNavigationBar: CubertoBottomBar(
-                    barBackgroundColor: Color(0xFFF6F7F9),
-                  //  inactiveIconColor: inactiveColor,
-                    tabStyle: CubertoTabStyle.STYLE_FADED_BACKGROUND, // By default its CubertoTabStyle.STYLE_NORMAL
-                    selectedTab: currentPage,
-                    inactiveIconColor: Colors.grey,
-                    barBorderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    // By default its 0, Current page which is fetched when a tab is clickd, should be set here so as the change the tabs, and the same can be done if willing to programmatically change the tab.
-                   // drawer: CubertoDrawer.NO_DRAWER, // By default its NO_DRAWER (Availble START_DRAWER and END_DRAWER as per where you want to how the drawer icon in Cuberto Bottom bar)
-                    tabs: [
-                      TabData(
-                        iconData: Icons.home,
-                        title: AppLocalizations.of(context).tr("home"),
-                        tabColor: Color(0xFF801EFE),
-                      ),
-                      TabData(
-                        iconData: Icons.location_on,
-                        title: AppLocalizations.of(context).tr("localization"),
-                        tabColor: Color(0xFF801EFE),
-                      ),
-                      TabData(
-                        iconData: Icons.settings,
-                        title: AppLocalizations.of(context).tr('settings'),
-                        tabColor: Color(0xFF801EFE),
-                      ),
-                    ],
-                    onTabChangedListener: (position, title, color) async {
-                      Location location = Location();
-                      await location.getCurrentLocation();
-                      setState(() {
-                        currentPage = position;
-                        currentTitle = title;
-                        currentColor = color;
-
-                        switch(currentPage){
-                          case 0: break ;
-                          case 1: Navigator.of(context).push(MaterialPageRoute(builder: (context)=> AppLocalization(latitude: location.latitude,longitude: location.longitude,))); break ;
-                          case 2: Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Settings()));break;
-                          default:break ;
-                        }
-                      });
-                    },
-                  ),*/
-                /*  appBar: AppBar(
-                    title: appBarTitle,
-                    backgroundColor: Color(0xFFF6F7F9),
-                    actions: <Widget>[
-                      IconButton(
-                          icon: actionIcon,
-                          onPressed: () {
-                            // this.actionIcon = new Icon(Icons.close);
-                            setState(() {
-                              if (this.actionIcon.icon == Icons.search) {
-                                this.actionIcon = new Icon(Icons.close);
-                                this.appBarTitle = new TextField(
-                                  focusNode: focusNode,
-                                  controller: searchController,
-                                  style: new TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  decoration: new InputDecoration(
-                                      prefixIcon: InkWell(
-                                          onTap: () async {
-                                            if (searchController.text.isEmpty) {
-                                            } else {
-
-                                              setState(() {
-                                                loading = true ;
-                                              });
-
-                                              dynamic weatherData = await WeatherModel().getFiveDaysByName(searchController.text.toString());
-                                              int dr ;
-                                              try{
-                                                dr = weatherData['list'].length;
-                                              }catch(e){
-                                                dr = 0 ;
-                                              }
-
-
-
-
-
-                                              List<dynamic> dates = [];
-
-
-
-                                              if(dr>0){
-                                             DateTime dt = DateTime.parse(weatherData['list'][0]["dt_txt"]);
-                                                for (int i = 0; i < dr; i++) {
-                                                  var date =
-                                                  dt.difference(DateTime.parse(weatherData['list'][i]["dt_txt"]));
-                                                  if (date.inHours % 24 == 0) {
-                                                    dates.add(weatherData['list'][i]);
-                                                  }
-                                                }
-
-                                                var weatherDetail = await WeatherModel().getLocationWeatherByName(searchController.text.toString());
-                                                setState(() {
-                                                  loading = false ;
-                                                });
-                                                Navigator.push(context, MaterialPageRoute(builder:(context)=> WeatherApp(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,) ));
-
-                                              }else{
-                                                setState(() {
-                                                  loading = false ;
-                                                });
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    // return object of type Dialog
-                                                    return AlertDialog(
-                                                      title: Text(AppLocalizations.of(context).tr('sorry')),
-                                                      content: new Text(AppLocalizations.of(context).tr('WeCouldFind')+"\"${searchController.text}\""),
-                                                      actions: <Widget>[
-                                                        // usually buttons at the bottom of the dialog
-                                                        new FlatButton(
-                                                          child: Text(AppLocalizations.of(context).tr('close')),
-                                                          onPressed: () {
-                                                            Navigator.of(context).pop();
-                                                          },
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              }
-
-                                            }
-                                          },
-                                          child: new Icon(Icons.search,
-                                              color: Colors.white)),
-                                      hintText: AppLocalizations.of(context).tr('search')+"...",
-                                      hintStyle: new TextStyle(color: Colors.white)),
-                                );
-                              } else {
-                                this.actionIcon = new Icon(Icons.search);
-                                this.appBarTitle = new Text("Climate Predictor");
-                              }
-                            });
-                          }),
-                    ],
-                    leading: IconButton(icon: Icon(Icons.near_me),
-                      onPressed: () async{
-
-                      setState(() {
-                        loading = true ;
-                      });
-                        dynamic weatherData = await WeatherModel().getFiveDays();
-                        int dr = weatherData['list'].length;
-
-                        DateTime dt = DateTime.parse(weatherData['list'][9]["dt_txt"]);
-
-                        List<dynamic> dates = [];
-
-                        for (int i = 0; i < dr; i++) {
-                          var date =
-                          dt.difference(DateTime.parse(weatherData['list'][i]["dt_txt"]));
-                          if (date.inHours % 24 == 0) {
-                            dates.add(weatherData['list'][i]);
-                          }
-                        }
-                        if(dates.length>0){
-                          var weatherDetail = await WeatherModel().getLocationWeather();
-                          setState(() {
-                            loading = false ;
-                          });
-                          Navigator.push(context, MaterialPageRoute(builder:(context)=> WeatherApp(locationWeather: dates,currentPage: 0,weatherDetails: weatherDetail,) ));
-
-                        }else{
-
-                        }
-
-                      },
-                    ),
-                  ),*/
                   backgroundColor: Color(0xFFF6F7F9),
                   endDrawer: Drawer(
 
@@ -530,7 +355,7 @@ class _WeatherAppState extends State<WeatherApp> {
                                     children: <Widget>[
                                       Text("${widget.weatherDetails['name']}",style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: SizeConfig.safeBlockHorizontal*10),),
+                                      fontSize: SizeConfig.safeBlockHorizontal*9),),
                                       Row(
                                         children: <Widget>[
                                           IconButton(
@@ -1454,7 +1279,6 @@ class _WeatherAppState extends State<WeatherApp> {
             width: 80,
             decoration: new BoxDecoration(
               color: (selected == true)?Color(0xFF801EFE):Color(0xFFF6F7F9),
-            //  color: Color(0xFFFF7F7E),
               borderRadius: new BorderRadius.all(Radius.circular(5)),
               boxShadow: [
                 BoxShadow(
@@ -1473,101 +1297,18 @@ class _WeatherAppState extends State<WeatherApp> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("$day ", style: TextStyle(fontSize: 16, color: (selected == true)?Colors.white:Colors.grey, fontWeight: FontWeight.bold),),
+                  child: Text("$day ", style: TextStyle(fontSize: SizeConfig.blockSizeHorizontal*3.3, color: (selected == true)?Colors.white:Colors.grey, fontWeight: FontWeight.bold),),
                 ),
                 Icon(Icons.wb_cloudy, color: (selected == true)?Colors.white:Colors.grey,),
                 Padding(
-                  padding: const EdgeInsets.only(left:8,top: 8,right: 8,bottom: 0),
-                  child: Text("$mon", style: TextStyle(fontSize: 14, color: (selected == true)?Colors.white:Colors.grey,fontWeight: FontWeight.bold),),
+                  padding: const EdgeInsets.only(left:8,top: 5,right: 8,bottom: 0),
+                  child: Text("$mon", style: TextStyle(fontSize: SizeConfig.blockSizeHorizontal*3, color: (selected == true)?Colors.white:Colors.grey,fontWeight: FontWeight.bold),),
                 )
               ],
             ),
           )
       ),
 
-      /*
-      * Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          width: SizeConfig.safeBlockHorizontal*20,
-          decoration: BoxDecoration(
-              color: (selected == true)?Colors.grey.shade300:Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "$day, ",
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0,color: Color(0xFFADADBB)),
-              ),
-              Text(
-                "$mon",
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 17.0,color: Color(0xFFADADBB)),
-              ),
-            ],
-          ),
-        ),
-      ),*/
     );
   }
 }
-
-
-
-/*7
-Container(
-                            width: double.infinity,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[0]
-                                          ["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[0]
-                                          ["dt_txt"])
-                                          .month,days[0],0),
-
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[1]["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[1]
-                                          ["dt_txt"])
-                                          .month,days[1],1),
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[2]["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[2]
-                                          ["dt_txt"])
-                                          .month,days[2],2),
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[3]["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[3]
-                                          ["dt_txt"])
-                                          .month,days[3],3),
-                                  cart(
-                                      DateTime.parse(
-                                          widget.locationWeather[4]["dt_txt"])
-                                          .day,
-                                      DateTime.parse(
-                                          widget.locationWeather[4]
-                                          ["dt_txt"])
-                                          .month,days[4],4),
-                                ],
-                              ),
-                            ),
-                          ),
-* */
